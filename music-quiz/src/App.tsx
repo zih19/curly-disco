@@ -5,12 +5,12 @@ import QuestionCard from './components/QuestionCard';
 //Type
 import {QuestionState, Difficulty} from './API';
 
-type AnswerObject = {
+export type AnswerObject = {
   question: string;
   answer: string;
   correct: boolean;
   correctAnswer: string;
-}
+};
 
 const TOTAL_QUESTIONS = 10;
 
@@ -22,10 +22,11 @@ const App = () => {
    const[score, setScore] = useState(0);
    const[gameOver, setGameOver] = useState(true);
 
-   console.log(fetchQuizQuestions(TOTAL_QUESTIONS, Difficulty.EASY)); 
+   //console.log(fetchQuizQuestions(TOTAL_QUESTIONS, Difficulty.EASY)); 
 
+   //console.log(questions);
 
-   const startTrivial = () => {
+   const startTrivial = async () => {
         // We want to make the API call(start the game) 
         // with the function called async().
         setLoading(true);
@@ -36,43 +37,86 @@ const App = () => {
           Difficulty.EASY
         );
 
-        setQuestions(questions);
+        setQuestions(newQuestions);
         setScore(0);
         setUserAnswers([]);
         setNumber(0);
         setLoading(false);
-
-
-   };
+    };
     
    const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {
         // deal with the scenario when the user triggers 
         // an answer for the question.
+        if (!gameOver) {
+          const answer_selected = e.currentTarget.value; // We call the button
+          const correct_Answer = questions[number].correct_answer === answer_selected; // check whether the current answer 
+                                                                                       // is equal to the correct answer
+          if (correct_Answer){
+              setScore(prev => prev + 1); // If the answer is correct, then the school will be added by 1.
+          }
+          // The user answer is more likely to be saved.
+          const answerObject = {
+               question: questions[number].question,
+               answer: answer_selected,
+               correct: correct_Answer,
+               correctAnswer: questions[number].correct_answer
+          };
+          setUserAnswers((prev) => [...prev, answerObject]);
+        }
+
    };
 
    const nextQuestion = () => {
         // concentrate on the specific instance at which the user
         // selects the next question.
-   };
+        const next = number + 1;
+        if (next === TOTAL_QUESTIONS){
+            setGameOver(true);
+        }
+        else{
+            setNumber(next);
+        }
+    };
 
   return (
      <div className="App">
          <h1>Music Quiz</h1>
-         <button className="start" onClick={startTrivial}>Start</button>
-         <p className="score">Score:</p>
-         <p>Loading Questions: ...</p>
-         {/* <QuestionCard 
+         {gameOver || userAnswers.length === TOTAL_QUESTIONS ? ( 
+            <button className="start" onClick={startTrivial}>
+              Start
+            </button>) : null
+          }
+
+         {!gameOver? (
+            <p className="score">
+              Score:{score}
+            </p>) :null
+         }
+
+         {loading && (
+            <p>
+              Loading Questions: ...
+            </p>)
+          }
+
+          {!loading && !gameOver && (
+          <QuestionCard 
             question={questions[number].question}
             answers={questions[number].answers}
             callback={checkAnswer}
-            userAnswer={userAnswers? userAnswers[number] : undefined}
+            userAnswer={userAnswers ? userAnswers[number] : undefined}
             questionNr={number + 1} //Every time you jump into the next question,
                                       // it should be number + 1
             totalQuestions={TOTAL_QUESTIONS}
+          />)
+          }
 
-         /> */}
-         <button className="next" onClick={nextQuestion}>Next</button>
-     </div>
+          {!loading && !gameOver && userAnswers.length === number + 1 && number !== TOTAL_QUESTIONS - 1 ? (
+              <button className="next" onClick={nextQuestion}>
+                Next
+              </button>): null
+          }  
+      </div>
   );
 }
 

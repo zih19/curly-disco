@@ -7,7 +7,7 @@ export type Question = {
     incorrect_answers: string[];
     question: string;
     type: string;
-}
+};
 
 export type QuestionState = Question & {answers: string[] };
 
@@ -32,4 +32,4 @@ export const fetchQuizQuestions = async(amount: number, difficulty: Difficulty) 
             ])
           }
      ))                                                 // Later, we wait for the json file itself.
-}
+};
