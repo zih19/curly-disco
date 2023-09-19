@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import {fetchQuizQuestions} from './API';
+import { fetchQuizQuestions } from './API';
 // Components
 import QuestionCard from './components/QuestionCard';
 //Type
 import {QuestionState, Difficulty} from './API';
+//Styles
+import { GlobalStyle, Wrapper } from './App.styles';
 
 export type AnswerObject = {
   question: string;
@@ -79,44 +81,47 @@ const App = () => {
     };
 
   return (
-     <div className="App">
-         <h1>Music Quiz</h1>
-         {gameOver || userAnswers.length === TOTAL_QUESTIONS ? ( 
-            <button className="start" onClick={startTrivial}>
-              Start
-            </button>) : null
+     <>
+      <GlobalStyle />
+      <Wrapper />
+          <h1>Music Quiz</h1>
+          {gameOver || userAnswers.length === TOTAL_QUESTIONS ? ( 
+              <button className="start" onClick={startTrivial}>
+                Start
+              </button>) : null
+            }
+
+          {!gameOver? (
+              <p className="score">
+                Score:{score}
+              </p>) :null
           }
 
-         {!gameOver? (
-            <p className="score">
-              Score:{score}
-            </p>) :null
-         }
+          {loading && (
+              <p>
+                Loading Questions: ...
+              </p>)
+            }
 
-         {loading && (
-            <p>
-              Loading Questions: ...
-            </p>)
-          }
+            {!loading && !gameOver && (
+            <QuestionCard 
+              question={questions[number].question}
+              answers={questions[number].answers}
+              callback={checkAnswer}
+              userAnswer={userAnswers ? userAnswers[number] : undefined}
+              questionNr={number + 1} //Every time you jump into the next question,
+                                        // it should be number + 1
+              totalQuestions={TOTAL_QUESTIONS}
+            />)
+            }
 
-          {!loading && !gameOver && (
-          <QuestionCard 
-            question={questions[number].question}
-            answers={questions[number].answers}
-            callback={checkAnswer}
-            userAnswer={userAnswers ? userAnswers[number] : undefined}
-            questionNr={number + 1} //Every time you jump into the next question,
-                                      // it should be number + 1
-            totalQuestions={TOTAL_QUESTIONS}
-          />)
-          }
-
-          {!loading && !gameOver && userAnswers.length === number + 1 && number !== TOTAL_QUESTIONS - 1 ? (
-              <button className="next" onClick={nextQuestion}>
-                Next
-              </button>): null
-          }  
-      </div>
+            {!loading && !gameOver && userAnswers.length === number + 1 && number !== TOTAL_QUESTIONS - 1 ? (
+                <button className="next" onClick={nextQuestion}>
+                  Next
+                </button>): null
+            }  
+        
+      </>
   );
 }
 
