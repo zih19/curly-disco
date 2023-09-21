@@ -23,6 +23,7 @@ const App = () => {
    const[userAnswers, setUserAnswers] = useState<AnswerObject[]>([]);
    const[score, setScore] = useState(0);
    const[gameOver, setGameOver] = useState(true);
+   const[returnBack, setReturnBack] = useState(true);
 
    //console.log(fetchQuizQuestions(TOTAL_QUESTIONS, Difficulty.EASY)); 
 
@@ -68,6 +69,16 @@ const App = () => {
 
    };
 
+  //  const previousQuestion = () => {
+  //      const prev = number - 1;
+  //      if (prev === 1) {
+  //          setReturnBack(false);
+  //      }
+  //      else{
+  //          setNumber(prev);
+  //      }
+  //  }
+
    const nextQuestion = () => {
         // concentrate on the specific instance at which the user
         // selects the next question.
@@ -89,7 +100,7 @@ const App = () => {
               <button className="start" onClick={startTrivial}>
                 Start
               </button>) : null
-            }
+          }
 
           {!gameOver? (
               <p className="score">
@@ -114,7 +125,8 @@ const App = () => {
               totalQuestions={TOTAL_QUESTIONS}
             />)
             }
-
+            
+            
             {!loading && !gameOver && userAnswers.length === number + 1 && number !== TOTAL_QUESTIONS - 1 ? (
                 <button className="next" onClick={nextQuestion}>
                   Next
