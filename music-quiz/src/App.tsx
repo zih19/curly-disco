@@ -23,7 +23,6 @@ const App = () => {
    const[userAnswers, setUserAnswers] = useState<AnswerObject[]>([]);
    const[score, setScore] = useState(0);
    const[gameOver, setGameOver] = useState(true);
-   const[returnBack, setReturnBack] = useState(true);
 
    //console.log(fetchQuizQuestions(TOTAL_QUESTIONS, Difficulty.EASY)); 
 
@@ -58,26 +57,26 @@ const App = () => {
               setScore(prev => prev + 1); // If the answer is correct, then the school will be added by 1.
           }
           // The user answer is more likely to be saved.
-          const answerObject = {
+          const AnswerObject = {
                question: questions[number].question,
                answer: answer_selected,
                correct: correct_Answer,
                correctAnswer: questions[number].correct_answer
           };
-          setUserAnswers((prev) => [...prev, answerObject]);
+          setUserAnswers((prev) => [...prev, AnswerObject]);
         }
 
    };
 
-  //  const previousQuestion = () => {
-  //      const prev = number - 1;
-  //      if (prev === 1) {
-  //          setReturnBack(false);
-  //      }
-  //      else{
-  //          setNumber(prev);
-  //      }
-  //  }
+    //  const previousQuestion = () => {
+    //      const previous = number - 1;
+    //      if (previous === 1) {
+    //          setGameOver(true);
+    //      }
+    //      else{
+    //          setNumber(previous);
+    //      }
+    //  }
 
    const nextQuestion = () => {
         // concentrate on the specific instance at which the user
@@ -125,7 +124,6 @@ const App = () => {
               totalQuestions={TOTAL_QUESTIONS}
             />)
             }
-            
             
             {!loading && !gameOver && userAnswers.length === number + 1 && number !== TOTAL_QUESTIONS - 1 ? (
                 <button className="next" onClick={nextQuestion}>
