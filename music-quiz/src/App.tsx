@@ -36,6 +36,7 @@ const App = () => {
         // We want to make the API call(start the game) 
         // with the function called async().
         setLoading(true);
+        setBack(false);
         setGameOver(false);
 
         const newQuestions = await fetchQuizQuestions(
@@ -71,18 +72,15 @@ const App = () => {
         }
    };
 
-   const previousQuestion = () => {
-       const prev = number - 1;
-       if (prev === -1) {
-         setBack(false);
-       }
-       else if (number >= 1) {
-         setNumber(prev);
-       }
-      //  else{
-      //    setNumber(prev);
-      //  }
-   }
+  //  const previousQuestion = () => {
+  //      const prev = number - 1;
+  //      if (prev === -1) {
+  //        setBack(false);
+  //      }
+  //      else {
+  //        setNumber(prev);
+  //      }
+  //  }
 
    const nextQuestion = () => {
         // concentrate on the specific instance at which the user
@@ -153,12 +151,12 @@ const App = () => {
             />)
             }
 
-            {
+            {/* {
               !loading && back && userAnswers.length !== 0 && number >= 1 ? (
                   <button className = "previous" onClick={previousQuestion}>
                       Previous
                   </button>): null
-            }
+            } */}
             
             {!loading && !gameOver && userAnswers.length === number + 1 && number !== TOTAL_QUESTIONS - 1 ? (
                 <button className="next" onClick={nextQuestion}>
