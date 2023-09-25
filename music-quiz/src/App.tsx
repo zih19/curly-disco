@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { fetchQuizQuestions } from './API';
+import React, { useState, useEffect } from 'react';
+import { fetchQuizQuestions } from './Questions';
 // Components
 import QuestionCard from './components/QuestionCard';
 //Type
-import {QuestionState, Difficulty} from './API';
+import {QuestionState, Difficulty} from './Questions';
 //Styles
 import { GlobalStyle, Wrapper } from './App.styles';
 
@@ -17,12 +17,16 @@ export type AnswerObject = {
 const TOTAL_QUESTIONS = 10;
 
 const App = () => {
-   const[loading, setLoading] = useState(false);
-   const[questions, setQuestions] = useState<QuestionState[]>([]);
-   const[number, setNumber] = useState(0);
-   const[userAnswers, setUserAnswers] = useState<AnswerObject[]>([]);
-   const[score, setScore] = useState(0);
-   const[gameOver, setGameOver] = useState(true);
+   const[loading, setLoading] = useState(false); // My game is loaded
+   const[questions, setQuestions] = useState<QuestionState[]>([]); // total question we need to take into account
+   const[number, setNumber] = useState(0); // the question number
+   const[userAnswers, setUserAnswers] = useState<AnswerObject[]>([]);  // the answer from the user
+   const[score, setScore] = useState(0); // the score each user receives
+   const[gameOver, setGameOver] = useState(true); // the game is Over
+   const[back, setBack] = useState(true); // back to the previous question 
+   const[seconds, setSecond] = useState(0); // second
+   const[minutes, setMinute] = useState(0); // minute
+   const[hours, setHour] = useState(0); // hour
 
    //console.log(fetchQuizQuestions(TOTAL_QUESTIONS, Difficulty.EASY)); 
 
@@ -65,18 +69,20 @@ const App = () => {
           };
           setUserAnswers((prev) => [...prev, AnswerObject]);
         }
-
    };
 
-    //  const previousQuestion = () => {
-    //      const previous = number - 1;
-    //      if (previous === 1) {
-    //          setGameOver(true);
-    //      }
-    //      else{
-    //          setNumber(previous);
-    //      }
-    //  }
+   const previousQuestion = () => {
+       const prev = number - 1;
+       if (prev === -1) {
+         setBack(false);
+       }
+       else if (number >= 1) {
+         setNumber(prev);
+       }
+      //  else{
+      //    setNumber(prev);
+      //  }
+   }
 
    const nextQuestion = () => {
         // concentrate on the specific instance at which the user
@@ -90,7 +96,24 @@ const App = () => {
         }
     };
 
-  return (
+    useEffect(()=>{
+      const interval = setInterval(() => {
+         setSecond(prevSecond => (prevSecond + 1) % 60);
+         if (seconds === 59) {
+            setMinute(prevMinute => (prevMinute + 1) % 60);
+         }
+
+         if (minutes === 59) {
+            setHour(prevHour => (prevHour + 1) % 60);
+         }
+      }, 1000);
+      
+      return () => clearInterval(interval);
+
+    }, [seconds, minutes]);
+    
+    
+    return (
      <>
       <GlobalStyle />
       <Wrapper />
@@ -101,10 +124,15 @@ const App = () => {
               </button>) : null
           }
 
-          {!gameOver? (
+          {!gameOver ? (
+            <div className="setting">
               <p className="score">
                 Score:{score}
-              </p>) :null
+              </p>
+              <p className="time">
+                Time:{hours} hour(s) {minutes} minutes(s) {seconds} second(s)
+              </p>
+            </div>): null
           }
 
           {loading && (
@@ -124,12 +152,19 @@ const App = () => {
               totalQuestions={TOTAL_QUESTIONS}
             />)
             }
+
+            {
+              !loading && back && userAnswers.length !== 0 && number >= 1 ? (
+                  <button className = "previous" onClick={previousQuestion}>
+                      Previous
+                  </button>): null
+            }
             
             {!loading && !gameOver && userAnswers.length === number + 1 && number !== TOTAL_QUESTIONS - 1 ? (
                 <button className="next" onClick={nextQuestion}>
                   Next
                 </button>): null
-            }  
+            }
         
       </>
   );

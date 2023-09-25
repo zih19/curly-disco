@@ -57,7 +57,6 @@ align-items: center;
   margin: 20px;
 }
 
-.start 
 .next {
   cursor: pointer;
   background: linear-gradient(180deg, #fff, #ffcc91);
