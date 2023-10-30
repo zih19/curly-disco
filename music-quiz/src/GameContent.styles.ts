@@ -73,6 +73,31 @@ align-items: center;
 }
 `;
 
+export const RightButton = styled.button`{
+    background-color: gray;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    position: fixed;
+    bottom: 50px; 
+    right: 50px; 
+}`;
+
+export const LeftButton = styled.button `{
+    background-color: gray;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    position: fixed;
+    bottom: 50px; 
+    left: 50px;
+}`
+
+
 
      
     
