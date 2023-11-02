@@ -73,29 +73,53 @@ align-items: center;
 }
 `;
 
-export const RightButton = styled.button`{
-    background-color: gray;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    position: fixed;
-    bottom: 50px; 
-    right: 50px; 
-}`;
+export const NextButton = styled.button`
+  background-color: gray;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  position: relative;
+  top: 25px; 
+  left: 190px;
+`;
 
-export const LeftButton = styled.button `{
+export const RecordButton = styled.button `
     background-color: gray;
     color: white;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
-    position: fixed;
-    bottom: 50px; 
+    position: relative;
+    top: 525px; 
+    right: 0px;
+`;
+
+export const AgainButton = styled.button `
+    background-color: gray;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+    top: 525px; 
     left: 50px;
-}`
+`;
+
+export const StartButton = styled.button `
+  background-color: gray;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  position: relative;
+  bottom: 25px; 
+  left: 45px;
+`;
 
 
 

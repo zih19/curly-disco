@@ -5,11 +5,12 @@ import React, { useState, useEffect } from 'react';
 //Type
 import {QuestionState} from '../../Questions';
 //Styles
-import { GlobalStyle, Wrapper, RightButton, LeftButton } from '../../GameContent.styles';
+import { GlobalStyle, Wrapper, NextButton, RecordButton, AgainButton, StartButton } from '../../GameContent.styles';
 
 import AnswerButtonsTwo from '../../AnswerButtonsTwo';
 //import GameMode from '../GameMode'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom';
+import { AiFillSound } from 'react-icons/ai';
 
 
 
@@ -41,11 +42,14 @@ const Game = () => {
    const[difficulty, setDifficulty] = useState('Easy');
 
    const[gameOver, setGameOver] = useState(true); // the game is Over
+
    
    //const[back, setBack] = useState(true); // back to the previous question 
    const[seconds, setSecond] = useState(0); // second
    const[minutes, setMinute] = useState(0); // minute
    const[hours, setHour] = useState(0); // hour
+
+   const navigate = useNavigate();
 
    //console.log(fetchQuizQuestions(TOTAL_QUESTIONS, Difficulty.EASY)); 
 
@@ -116,13 +120,12 @@ const Game = () => {
    }
  
    const BackMenu = () => {
-       const navigate = useNavigate();
+       
        navigate('/menu/gamestart');
    }
 
    const UserRecord = () => {
-       const navigateRecord = useNavigate();
-       navigateRecord('/menu/userdata', {state:{score: score, difficulty: difficulty}});
+       navigate('/menu/userdata', {state:{score: score, difficulty: difficulty}});
    }
     
 
@@ -146,6 +149,7 @@ const Game = () => {
         else{
             setNumber(next);
         }
+      
     };
 
 
@@ -176,27 +180,23 @@ const Game = () => {
           <h1>Music Quiz </h1>
           
           {gameOver && number === 0 &&
-            <button className="start" onClick={startTrivial}>
+            <StartButton className="start" onClick={startTrivial} >
                Start
-            </button>
+            </StartButton>
           }
 
-          {gameOver && number === TOTAL_QUESTIONS - 1 &&
+          {!gameOver && number === TOTAL_QUESTIONS - 1 && userAnswers.length === number + 1 &&
             <div>
               
-              <LeftButton className="statistics" onClick={UserRecord}>
+              <RecordButton className="statistics" onClick={UserRecord}>
                          User Record
-              </LeftButton>
+              </RecordButton>
               
               
                
-              <RightButton className="finish" onClick={BackMenu}>
+              <AgainButton className="finish" onClick={BackMenu}>
                     Play Again
-              </RightButton>
-
-              {/* <button className="start" onClick={startTrivial}>
-                   Start
-              </button> */}
+              </AgainButton>
             </div>  
             
           }
@@ -227,7 +227,7 @@ const Game = () => {
                 
               <div>
                   {/* include the audio */}
-
+                  <AiFillSound style={{height:50, width:50}}/>
                   <AnswerButtonsTwo answers={['P1', 'm2', 'M2', 'm3', 
                                               'M3', 'P4', 'A4', 'P5', 
                                               'm6', 'M6', 'm7', 'M7',
@@ -240,9 +240,9 @@ const Game = () => {
 
             
             {!loading && !gameOver && userAnswers.length === number + 1 && number !== TOTAL_QUESTIONS - 1 ? (
-                <RightButton className="next" onClick={nextQuestion}>
+                <NextButton className="next" onClick={nextQuestion}>
                   Next
-                </RightButton>): null
+                </NextButton>): null
             }
         
       </>
