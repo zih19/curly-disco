@@ -36,6 +36,11 @@ const Game = () => {
 
    const[number, setNumber] = useState(0); // the question number
 
+   const[currentAnswer, setCurrentAnswer] = useState<{
+        answer: string;
+        isCorrect: boolean;
+   } | null>(null);
+
    const[userAnswers, setUserAnswers] = useState<string[]>([]); // the answers from the users
 
    const[score, setScore] = useState(0); // the score each user receives
@@ -78,45 +83,21 @@ const Game = () => {
         setLoading(false);
     };
 
-    
-  //  const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {
-  //       // deal with the scenario when the user triggers 
-  //       // an answer for the question.
-  //       if (!gameOver) {
-  //         const answer_selected = e.currentTarget.value; // We call the button
-  //         const correct_Answer = questions[number].correct_answer === answer_selected; // check whether the current answer 
-  //                                                                                      // is equal to the correct answer
-  //         if (correct_Answer){
-  //             setScore(prev => prev + 1); // If the answer is correct, then the school will be added by 1.
-  //         }
-
-  //         // The user answer is more likely to be saved.
-  //         const AnswerObject = {
-  //              question: questions[number].question,
-  //              answer: answer_selected,
-  //              correct: correct_Answer,
-  //              correctAnswer: questions[number].correct_answer
-  //         };
-  //         setUserAnswers((prev) => [...prev, AnswerObject]);
-  //       }
-  //  };
-
-   const handleAnswerClick = (answer: string) => {
-      setUserAnswers((prevSelectedAnswers) => [...prevSelectedAnswers, answer])
-   }
-
-   const CheckAnswer = () => {
-      if (userAnswers.length === 0) {
+   const CheckAnswer = (answer_selected: string) => {
+      if (userAnswers.length === 0 || questions.length === 0) {
            return
       }
-      
-      /* identify what your standard answer is. If both the standard answer and the correct answer are equal, the variable
-         score should be increment by 1 */
-      // if (userAnswers.every((answer) => answer === )) {
-      //       setScore(score + 1)
-      // }
 
-      setUserAnswers([]);
+      const correct_answer = questions[number].correct_answer;
+      const isCorrect = correct_answer === answer_selected;
+      
+      if (isCorrect) {
+        setScore((prev) => prev + 1);
+      }
+      setCurrentAnswer({answer: answer_selected, isCorrect});
+     
+      setUserAnswers((prev) => [...prev, answer_selected]);
+      
    }
  
    const BackMenu = () => {
@@ -127,17 +108,6 @@ const Game = () => {
    const UserRecord = () => {
        navigate('/menu/userdata', {state:{score: score, difficulty: difficulty}});
    }
-    
-
-  //  const previousQuestion = () => {
-  //      const prev = number - 1;
-  //      if (prev === -1) {
-  //        setBack(false);
-  //      }
-  //      else {
-  //        setNumber(prev);
-  //      }
-  //  }
 
    const nextQuestion = () => {
         // concentrate on the specific instance at which the user
@@ -231,7 +201,9 @@ const Game = () => {
                   <AnswerButtonsTwo answers={['P1', 'm2', 'M2', 'm3', 
                                               'M3', 'P4', 'A4', 'P5', 
                                               'm6', 'M6', 'm7', 'M7',
-                                              'P8']} onAnswerClick={handleAnswerClick}
+                                              'P8']} 
+                                    onAnswerClick={CheckAnswer}
+                                    answerSelected={currentAnswer}
                   />
 
                  

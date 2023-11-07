@@ -8,16 +8,25 @@ import { ButtonGroupsOne, SquaredButton } from './AnswerButtons.styles';
 interface ButtonGroupProps {
    answers: string[]
    onAnswerClick: (answer: string) => void
+   answerSelected: {
+      answer: string,
+      isCorrect: boolean,
+   } | null;
 }
 
-const AnswerButtonsTwo: React.FC<ButtonGroupProps> = ({answers, onAnswerClick}) => {
+const AnswerButtonsTwo: React.FC<ButtonGroupProps> = ({answers, onAnswerClick, answerSelected}) => {
   
    return (
    <>
       <ButtonGroupsOne>
       {
          answers.map((answer) => (
-            <SquaredButton onClick={()=>onAnswerClick(answer)}>
+            <SquaredButton key={answer} onClick={()=>onAnswerClick(answer)} 
+                           style={{backgroundColor: answerSelected?.answer === answer
+                                   ? answerSelected?.isCorrect
+                                      ? "green"
+                                      : "red"
+                                   : "initial"}}>
                   {answer}
             </SquaredButton>
          ))
