@@ -121,6 +121,19 @@ export const StartButton = styled.button `
   left: 45px;
 `;
 
+export const ReturnButton = styled.button `
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  margin-bottom: 20px;
+
+  &:hover{
+    background-color: #0056b3;
+  }
+`;
+
 
 
      

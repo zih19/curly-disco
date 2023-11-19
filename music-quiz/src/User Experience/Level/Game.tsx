@@ -39,6 +39,7 @@ const Game = () => {
    const[currentAnswer, setCurrentAnswer] = useState<{
         answer: string;
         isCorrect: boolean;
+        correctAnswer: string
    } | null>(null);
 
    const[userAnswers, setUserAnswers] = useState<string[]>([]); // the answers from the users
@@ -83,6 +84,11 @@ const Game = () => {
         setLoading(false);
     };
 
+    // const clickAnswer = (answer_selected: string) => {
+    //    setUserAnswers((prev) => [...prev, answer_selected]);
+    // }
+
+    
    const CheckAnswer = (answer_selected: string) => {
       if (userAnswers.length === 0 || questions.length === 0) {
            return
@@ -94,9 +100,9 @@ const Game = () => {
       if (isCorrect) {
         setScore((prev) => prev + 1);
       }
-      setCurrentAnswer({answer: answer_selected, isCorrect});
-     
-      setUserAnswers((prev) => [...prev, answer_selected]);
+      setCurrentAnswer({answer: answer_selected, 
+                        isCorrect,
+                        correctAnswer: correct_answer});
       
    }
  

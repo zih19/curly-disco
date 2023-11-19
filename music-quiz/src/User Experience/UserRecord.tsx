@@ -1,4 +1,5 @@
 import {useLocation, useNavigate} from 'react-router-dom';
+import { ReturnButton } from '../GameContent.styles';
 
 const UserRecord = () => {
    
@@ -16,7 +17,7 @@ const UserRecord = () => {
            <p> Score: {score}</p>
            <p> Difficulty: {difficulty}</p>
 
-          <button className="return" onClick={RestartNewRound} > Restart Game </button>
+          <ReturnButton className="return" onClick={RestartNewRound} > Restart Game </ReturnButton>
        </div>
     );
 };

@@ -11,30 +11,40 @@ interface ButtonGroupProps {
    answerSelected: {
       answer: string,
       isCorrect: boolean,
+      correctAnswer: string
    } | null;
 }
 
 const AnswerButtonsTwo: React.FC<ButtonGroupProps> = ({answers, onAnswerClick, answerSelected}) => {
-  
+ 
    return (
-   <>
+   <> 
       <ButtonGroupsOne>
       {
-         answers.map((answer) => (
-            <SquaredButton key={answer} onClick={()=>onAnswerClick(answer)} 
-                           style={{backgroundColor: answerSelected?.answer === answer
-                                   ? answerSelected?.isCorrect
-                                      ? "green"
-                                      : "red"
-                                   : "initial"}}>
-                  {answer}
-            </SquaredButton>
-         ))
-         
-      }
+         answers.map((answer) => {
+            
+            let buttonColor = "initial";
+
+            if (answerSelected) {
+               if (answerSelected.answer === answer) {
+                 buttonColor = answerSelected.isCorrect ? "green" : "red";
+               }
+               else if (answer === answerSelected.correctAnswer) {
+                  buttonColor = "green";
+               }
+            }
+           
+            return (
+               <SquaredButton key={answer} 
+                              onClick={()=>onAnswerClick(answer)} 
+                              style={{backgroundColor: buttonColor}}>
+                     {answer}
+               </SquaredButton>
+            );
+         })
+      };
       </ButtonGroupsOne>
    </>
-  
-  );
+   );
 };
 export default AnswerButtonsTwo;
