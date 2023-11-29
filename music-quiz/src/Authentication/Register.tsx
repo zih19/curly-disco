@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {Wrapper, Header, FormGroup, Label, Input, SubmitButton} from './Style/User.styles';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Register = () => {
     const[form, setForm] = useState({
@@ -30,17 +31,30 @@ const Register = () => {
         setForm({...form, [name]:value});
     };
 
-    const handleRegister = () => {
+    const handleRegister = async() => {
          // send a request or connection to the backend
-         localStorage.setItem("firstname", form.firstname);
-         localStorage.setItem("lastname", form.lastname);
-         localStorage.setItem('username', form.username);
-         localStorage.setItem('age', form.age);
-         localStorage.setItem('musicalYear', form.musicalYear);
-         localStorage.setItem('email', form.email);
-         localStorage.setItem('password', form.password);
-         localStorage.setItem('confirmedPassword', form.confirmedPassword);
-         navigate("/register/success");
+       //   localStorage.setItem("firstname", form.firstname);
+       //   localStorage.setItem("lastname", form.lastname);
+       //   localStorage.setItem('username', form.username);
+       //   localStorage.setItem('age', form.age);
+       //   localStorage.setItem('musicalYear', form.musicalYear);
+       //   localStorage.setItem('email', form.email);
+       //   localStorage.setItem('password', form.password);
+       //   localStorage.setItem('confirmedPassword', form.confirmedPassword);
+       
+       try {
+           console.log("YO");
+           const response = await axios.post('http://127.0.0.1:8000/api/user/create/', form);
+           console.log('User registered successfully', response.data);
+           console.log(form);
+           navigate("/register/success");
+       } catch (error) {
+              if (axios.isAxiosError(error)) {
+                     console.error('Registration failed:', error.response ? error.response.data : error.message); //failing here
+                 } else {
+                     console.error('Registration failed:', error);
+                 }
+       }
     };
 
    
