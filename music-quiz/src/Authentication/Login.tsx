@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 //import { useHistory } from 'react-router-dom';
 import { useNavigate, Link } from 'react-router-dom';
 import { Wrapper, Header, FormGroup, Label, Input, SubmitButton} from './Style/User.styles';
+import axios from 'axios';
 
 const Login = () => {
   const[form, setForm] = useState({
@@ -20,15 +21,22 @@ const Login = () => {
   //const user = [{username:"zih19", password:"123456"}]
   //const navigate = useNavigate();
 
-  const handleLogin = () => {
-      const savedUserName = localStorage.getItem('username');
-      const savedPassword = localStorage.getItem('password');
-      if (form.username === savedUserName && form.password === savedPassword) {
-        navigate("/menu");
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/api/user/login/', form);
+      console.log('Login successful');
+      console.log(response.data);
+      navigate('/menu');
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('Login failed:', error.response ? error.response.data : error.message); //failing here
+      } else {
+          console.error('Login failed:', error);
       }
-      else{
-        alert('Invalid username or password')
-      }
+      alert('Invalid username or password');
+    }
   };
  
 

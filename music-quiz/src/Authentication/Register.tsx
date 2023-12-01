@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {Wrapper, Header, FormGroup, Label, Input, SubmitButton} from './Style/User.styles';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+
 import axios from 'axios';
 
 const Register = () => {
@@ -56,10 +57,14 @@ const Register = () => {
               // console.log("ERROR ENCOUNTERED")
               //console.log(error)
               if (axios.isAxiosError(error)) {
-                     console.error('Registration failed:', error.response ? error.response.data : error.message); //failing here
+                     const errorMessage = error.response ? error.response.data : error.message;
+                     console.error('Registration failed:', errorMessage); //failing here
+                     alert('Registration failed: ' + errorMessage);
                  } else {
                      console.error('Registration failed:', error);
+                     alert('Registration failed: ' + error);
                  }
+
        }
     };
 
@@ -136,9 +141,8 @@ const Register = () => {
                 <SubmitButton type="submit"> Register </SubmitButton>
             </form>
 
-            {/* <div className="button">
-                <SubmitButton type="submit"> Register </SubmitButton>
-            </div> */}
+            {/* Back button */}
+            <Link to="/">Back to Login</Link>
             
 
         </Wrapper>
