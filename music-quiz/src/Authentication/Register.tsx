@@ -32,16 +32,19 @@ const Register = () => {
     };
 
     const handleRegister = async(e: React.FormEvent<HTMLFormElement>) => {
-         // send a request or connection to the backend
-       //   localStorage.setItem("firstname", form.firstname);
-       //   localStorage.setItem("lastname", form.lastname);
-       //   localStorage.setItem('username', form.username);
-       //   localStorage.setItem('age', form.age);
-       //   localStorage.setItem('musicalYear', form.musicalYear);
-       //   localStorage.setItem('email', form.email);
-       //   localStorage.setItem('password', form.password);
-       //   localStorage.setItem('confirmedPassword', form.confirmedPassword);
        e.preventDefault();
+       if (form.password !== form.confirmedPassword){
+              console.error('Passwords do not match!');
+              return;
+       }
+       const requiredFields: Array<keyof typeof form> = ['firstname', 'lastname', 'username', 'age', 'musicalYear', 'email', 'password', 'confirmedPassword'];
+       for (const field of requiredFields) {
+         if (!form[field]) {
+           console.error(`${field} is required`);
+           // Set an error state or display a message to the user
+           return;
+         }
+       }
        try {
            //console.log('Form data: ', form);
            const response = await axios.post('http://127.0.0.1:8000/api/user/create/', form);
