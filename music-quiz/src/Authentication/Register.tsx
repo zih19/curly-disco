@@ -20,7 +20,7 @@ const Register = () => {
     // const[musicalYear, setMusicalYear] = useState('');
     // const[email, setEmail] = useState('');
     // const[password, setPassword] = useState('');
-    // const[confirmedpassword, setConfirmedPassword] = useState('');
+    // const[confirmedpassword, setConfirmedPassword] = useState('')
     
      
 
@@ -31,7 +31,7 @@ const Register = () => {
         setForm({...form, [name]:value});
     };
 
-    const handleRegister = async() => {
+    const handleRegister = async(e: React.FormEvent<HTMLFormElement>) => {
          // send a request or connection to the backend
        //   localStorage.setItem("firstname", form.firstname);
        //   localStorage.setItem("lastname", form.lastname);
@@ -41,14 +41,17 @@ const Register = () => {
        //   localStorage.setItem('email', form.email);
        //   localStorage.setItem('password', form.password);
        //   localStorage.setItem('confirmedPassword', form.confirmedPassword);
-       
+       e.preventDefault();
        try {
-           console.log("YO");
+           //console.log('Form data: ', form);
            const response = await axios.post('http://127.0.0.1:8000/api/user/create/', form);
-           console.log('User registered successfully', response.data);
-           console.log(form);
+           //console.log("SUCCESS")
+           //console.log('User registered successfully', response.data);
+           //console.log(form);
            navigate("/register/success");
        } catch (error) {
+              // console.log("ERROR ENCOUNTERED")
+              //console.log(error)
               if (axios.isAxiosError(error)) {
                      console.error('Registration failed:', error.response ? error.response.data : error.message); //failing here
                  } else {
