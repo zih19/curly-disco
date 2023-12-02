@@ -109,16 +109,13 @@ export const AgainButton = styled.button `
     left: 50px;
 `;
 
-export const StartButton = styled.button `
-  background-color: gray;
+export const GameStartButton = styled.button `
+  background-color: blue;
   color: white;
   border: none;
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
-  position: relative;
-  bottom: 25px; 
-  left: 45px;
 `;
 
 export const ReturnButton = styled.button `

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import {Wrapper, Header, FormGroup, Label, Input, SubmitButton} from './Style/User.styles';
-import { useNavigate } from 'react-router-dom';
-//import axios from 'axios';
+import { useNavigate, Link } from 'react-router-dom';
+
+import axios from 'axios';
 
 const Register = () => {
     const[form, setForm] = useState({
@@ -14,6 +15,13 @@ const Register = () => {
        password:'',
        confirmedPassword: '',
     });
+
+    // const[username, setUserName] = useState('');
+    // const[age, setAge] = useState('');
+    // const[musicalYear, setMusicalYear] = useState('');
+    // const[email, setEmail] = useState('');
+    // const[password, setPassword] = useState('');
+    // const[confirmedpassword, setConfirmedPassword] = useState('')
     
      
 
@@ -24,17 +32,40 @@ const Register = () => {
         setForm({...form, [name]:value});
     };
 
-    const handleRegister = () => {
-         // send a request or connection to the backend
-         localStorage.setItem("firstname", form.firstname);
-         localStorage.setItem("lastname", form.lastname);
-         localStorage.setItem('username', form.username);
-         localStorage.setItem('age', form.age);
-         localStorage.setItem('musicalYear', form.musicalYear);
-         localStorage.setItem('email', form.email);
-         localStorage.setItem('password', form.password);
-         localStorage.setItem('confirmedPassword', form.confirmedPassword);
-         navigate("/register/success");
+    const handleRegister = async(e: React.FormEvent<HTMLFormElement>) => {
+       e.preventDefault();
+       if (form.password !== form.confirmedPassword){
+              console.error('Passwords do not match!');
+              return;
+       }
+       const requiredFields: Array<keyof typeof form> = ['firstname', 'lastname', 'username', 'age', 'musicalYear', 'email', 'password', 'confirmedPassword'];
+       for (const field of requiredFields) {
+         if (!form[field]) {
+           console.error(`${field} is required`);
+           // Set an error state or display a message to the user
+           return;
+         }
+       }
+       try {
+           //console.log('Form data: ', form);
+           const response = await axios.post('http://127.0.0.1:8000/api/user/create/', form);
+           //console.log("SUCCESS")
+           //console.log('User registered successfully', response.data);
+           //console.log(form);
+           navigate("/register/success");
+       } catch (error) {
+              // console.log("ERROR ENCOUNTERED")
+              //console.log(error)
+              if (axios.isAxiosError(error)) {
+                     const errorMessage = error.response ? error.response.data : error.message;
+                     console.error('Registration failed:', errorMessage); //failing here
+                     alert('Registration failed: ' + errorMessage);
+                 } else {
+                     console.error('Registration failed:', error);
+                     alert('Registration failed: ' + error);
+                 }
+
+       }
     };
 
    
@@ -110,9 +141,8 @@ const Register = () => {
                 <SubmitButton type="submit"> Register </SubmitButton>
             </form>
 
-            {/* <div className="button">
-                <SubmitButton type="submit"> Register </SubmitButton>
-            </div> */}
+            {/* Back button */}
+            <Link to="/">Back to Login</Link>
             
 
         </Wrapper>

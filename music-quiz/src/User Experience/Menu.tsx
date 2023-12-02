@@ -23,6 +23,10 @@ const Menu: React.FC = () => {
         navigate('/menu/userdata');
     }
 
+    const logOut = () => {
+        navigate('/');
+    }
+
 
     return(
         <CenteredContainer>
@@ -35,6 +39,7 @@ const Menu: React.FC = () => {
            <ButtonContainer>
                 <SelectedButton onClick={GameMode}>Games</SelectedButton>
                 <SelectedButton onClick={UserData}>User Data</SelectedButton>
+                <SelectedButton onClick={logOut}>Log Out </SelectedButton>
             </ButtonContainer>
 
         </CenteredContainer>

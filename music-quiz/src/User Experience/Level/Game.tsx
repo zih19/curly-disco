@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 //Type
 import {QuestionState} from '../../Questions';
 //Styles
-import { GlobalStyle, Wrapper, NextButton, RecordButton, AgainButton, StartButton } from '../../GameContent.styles';
+import { GlobalStyle, Wrapper, NextButton, RecordButton, AgainButton, GameStartButton} from '../../GameContent.styles';
 
 import AnswerButtonsTwo from '../../AnswerButtonsTwo';
 //import GameMode from '../GameMode'
@@ -59,8 +59,6 @@ const Game = () => {
 
    //console.log(fetchQuizQuestions(TOTAL_QUESTIONS, Difficulty.EASY)); 
 
-   //console.log(questions);
-
    const startTrivial = async () => {
         // We want to make the API call(start the game) 
         // with the function called async().
@@ -71,10 +69,7 @@ const Game = () => {
         //TODO
         /* Music Interval using axios */
        
-       
-
-
-        setScore(0);
+         setScore(0);
         setDifficulty("Easy");
         setUserAnswers([]);
         setNumber(0);
@@ -112,6 +107,10 @@ const Game = () => {
        navigate('/menu/userdata', {state:{score: score, difficulty: difficulty}});
    }
 
+   const UserMenu = () => {
+        navigate('/menu');
+   }
+
    const nextQuestion = () => {
         // concentrate on the specific instance at which the user
         // selects the next question.
@@ -126,7 +125,7 @@ const Game = () => {
     };
 
 
-
+   
     useEffect(()=>{
       const interval = setInterval(() => {
          setSecond(prevSecond => (prevSecond + 1) % 60);
@@ -150,12 +149,24 @@ const Game = () => {
       <GlobalStyle />
       <Wrapper />
           
-          <h1>Music Quiz </h1>
-          
-          {gameOver && number === 0 &&
-            <StartButton className="start" onClick={startTrivial} >
-               Start
-            </StartButton>
+        {gameOver && number === 0 &&
+           <div style={{display: 'flex',
+                        flexDirection: 'column', 
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: '100vh'}}>
+              <div style={{ marginBottom: '20px' }}>
+                        <h1>Music Quiz</h1>
+              </div>
+              <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+                  <GameStartButton className="start" onClick={startTrivial} >
+                      Start
+                  </GameStartButton>
+                  <GameStartButton className="back" onClick={UserMenu}>
+                      Back
+                  </GameStartButton>
+              </div>
+           </div>
           }
 
           {!gameOver && number === TOTAL_QUESTIONS - 1 && userAnswers.length === number + 1 &&
@@ -209,8 +220,6 @@ const Game = () => {
                                     onAnswerClick={CheckAnswer}
                                     answerSelected={currentAnswer}
                   />
-
-                 
               </div>
             )}
 
