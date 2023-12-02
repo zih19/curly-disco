@@ -50,11 +50,14 @@ const Game = () => {
 
    const[gameOver, setGameOver] = useState(true); // the game is Over
 
-   
-   //const[back, setBack] = useState(true); // back to the previous question 
-   const[seconds, setSecond] = useState(0); // second
-   const[minutes, setMinute] = useState(0); // minute
-   const[hours, setHour] = useState(0); // hour
+
+   const[timer, setTimer] = useState({
+      seconds: 0,
+      minutes: 0,
+      hours: 0
+   });
+
+   const [timerRunning, setTimerRunning] = useState(false);
 
    const navigate = useNavigate();
 
@@ -77,11 +80,10 @@ const Game = () => {
         setUserAnswers([]);
         setNumber(0);
         setLoading(false);
+        setTimer({seconds: 0, minutes: 0, hours: 0});
+        setTimerRunning(true);
     };
 
-    // const clickAnswer = (answer_selected: string) => {
-    //    setUserAnswers((prev) => [...prev, answer_selected]);
-    // }
 
     
    const CheckAnswer = (answer_selected: string) => {
@@ -107,7 +109,9 @@ const Game = () => {
    }
 
    const UserRecord = () => {
-       navigate('/menu/userdata', {state:{score: score, difficulty: difficulty}});
+       navigate('/menu/userdata', {state:{score: score, 
+                                          difficulty: difficulty,
+                                          timer: `${timer.hours}h ${timer.minutes}m ${timer.seconds}s`}});
    }
 
    const UserMenu = () => {
@@ -128,22 +132,28 @@ const Game = () => {
     };
 
 
-   
-    useEffect(()=>{
-      const interval = setInterval(() => {
-         setSecond(prevSecond => (prevSecond + 1) % 60);
-         if (seconds === 59) {
-            setMinute(prevMinute => (prevMinute + 1) % 60);
-         }
-
-         if (minutes === 59) {
-            setHour(prevHour => (prevHour + 1) % 60);
-         }
-      }, 1000);
       
+    useEffect(()=>{
+      let interval: NodeJS.Timeout;
+      if (timerRunning) {
+        interval = setInterval(() => {
+           setTimer(prevTimer => {
+              let { hours, minutes, seconds } = prevTimer;
+              seconds++;
+              if (seconds === 60) {
+                 minutes++;
+                 seconds = 0;
+              }
+              if (minutes === 60) {
+                 hours++;
+                 minutes = 60;
+              }
+              return { hours, minutes, seconds };
+           });        
+        }, 1000);
+      } 
       return () => clearInterval(interval);
-
-    }, [seconds, minutes]);
+}, [timerRunning]);
     
     
     return (
@@ -172,6 +182,7 @@ const Game = () => {
            </div>
           }
 
+
           {!gameOver && number === TOTAL_QUESTIONS - 1 && userAnswers.length === number + 1 &&
             <div>
               
@@ -179,10 +190,8 @@ const Game = () => {
                          User Record
               </RecordButton>
               
-              
-               
               <AgainButton className="finish" onClick={BackMenu}>
-                    Play Again
+                         Play Again
               </AgainButton>
             </div>  
             
@@ -194,7 +203,7 @@ const Game = () => {
                 Score:{score}
               </p>
               <p className="time">
-                Time:{hours} hour(s) {minutes} minutes(s) {seconds} second(s)
+                Time: {timer.hours}h {timer.minutes}m {timer.seconds}s
               </p>
             </div>): null
           }
@@ -213,7 +222,9 @@ const Game = () => {
             {!loading && !gameOver && (
                 
               <div>
-
+                  <p> 
+                     Question: {number + 1} / {TOTAL_QUESTIONS}
+                  </p>
                   {/* TODO: include the audio */}
                   <AiFillSound style={{height:50, width:50}}/>
                   <AnswerButtonsTwo answers={['P1', 'm2', 'M2', 'm3', 

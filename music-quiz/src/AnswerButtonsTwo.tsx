@@ -42,7 +42,7 @@ const AnswerButtonsTwo: React.FC<ButtonGroupProps> = ({answers, onAnswerClick, a
                </SquaredButton>
             );
          })
-      };
+      }
       </ButtonGroupsOne>
    </>
    );
