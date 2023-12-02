@@ -67,14 +67,11 @@ const Game = () => {
         setLoading(true);
         //setBack(false);
         setGameOver(false);
-
+        
+        //TODO
         /* Music Interval using axios */
        
-        // const newQuestions = await fetchQuizQuestions(
-        //   TOTAL_QUESTIONS,
-        //   Difficulty.EASY
-        // );
-        //setQuestions(newQuestions);
+       
 
 
         setScore(0);
@@ -202,7 +199,8 @@ const Game = () => {
             {!loading && !gameOver && (
                 
               <div>
-                  {/* include the audio */}
+
+                  {/* TODO: include the audio */}
                   <AiFillSound style={{height:50, width:50}}/>
                   <AnswerButtonsTwo answers={['P1', 'm2', 'M2', 'm3', 
                                               'M3', 'P4', 'A4', 'P5', 

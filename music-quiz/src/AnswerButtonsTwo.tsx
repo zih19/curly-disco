@@ -23,7 +23,7 @@ const AnswerButtonsTwo: React.FC<ButtonGroupProps> = ({answers, onAnswerClick, a
       {
          answers.map((answer) => {
             
-            let buttonColor = "initial";
+            let buttonColor = "#0074d9";
 
             if (answerSelected) {
                if (answerSelected.answer === answer) {
@@ -36,7 +36,7 @@ const AnswerButtonsTwo: React.FC<ButtonGroupProps> = ({answers, onAnswerClick, a
            
             return (
                <SquaredButton key={answer} 
-                              onClick={()=>onAnswerClick(answer)} 
+                              onClick={()=>onAnswerClick(answer)}
                               style={{backgroundColor: buttonColor}}>
                      {answer}
                </SquaredButton>

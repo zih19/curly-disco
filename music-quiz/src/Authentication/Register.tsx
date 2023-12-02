@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {Wrapper, Header, FormGroup, Label, Input, SubmitButton} from './Style/User.styles';
 import { useNavigate } from 'react-router-dom';
+//import axios from 'axios';
 
 const Register = () => {
     const[form, setForm] = useState({
@@ -13,13 +14,6 @@ const Register = () => {
        password:'',
        confirmedPassword: '',
     });
-
-    // const[username, setUserName] = useState('');
-    // const[age, setAge] = useState('');
-    // const[musicalYear, setMusicalYear] = useState('');
-    // const[email, setEmail] = useState('');
-    // const[password, setPassword] = useState('');
-    // const[confirmedpassword, setConfirmedPassword] = useState('');
     
      
 
