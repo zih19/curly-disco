@@ -9,9 +9,9 @@ import { GlobalStyle, Wrapper, NextButton, RecordButton, AgainButton, GameStartB
 
 import AnswerButtonsTwo from '../../AnswerButtonsTwo';
 //import GameMode from '../GameMode'
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, useLocation} from 'react-router-dom';
 import { AiFillSound } from 'react-icons/ai';
-
+import axios from 'axios';
 
 
 //import axios from 'axios';
@@ -25,7 +25,8 @@ export type AnswerObject = {
 const TOTAL_QUESTIONS = 10;
 
 const Game = () => {
-   
+   const location = useLocation();
+   const difficultyFromUrl = new URLSearchParams(location.search).get('difficulty')
    //const[openLoginin, setOpenLoginIn] = useState(false);
    //const[signedIn, signIn] = useState(false);
 
@@ -63,13 +64,15 @@ const Game = () => {
         // We want to make the API call(start the game) 
         // with the function called async().
         setLoading(true);
-        //setBack(false);
         setGameOver(false);
-        
-        //TODO
-        /* Music Interval using axios */
+        // Make a POST request to send the difficulty to the backend
+        await axios.post('http://127.0.0.1:8000/api/start-game/', difficultyFromUrl, {
+          headers: {
+            'Content-Type': 'text/plain',
+          },
+        });
        
-         setScore(0);
+        setScore(0);
         setDifficulty("Easy");
         setUserAnswers([]);
         setNumber(0);

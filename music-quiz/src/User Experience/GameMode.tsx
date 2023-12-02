@@ -3,28 +3,21 @@ import { CenteredContainer, SelectDifficulty, ButtonContainer, SelectedButton } 
 import { useNavigate } from 'react-router-dom';
 
 const GameMode = () => {
-
   const navigate = useNavigate();
-  
-  
-  const start = () => navigate('/menu/gamestart/play')
 
+  const start = (difficulty: string) => navigate(`/menu/gamestart/play?difficulty=${difficulty}`);
 
   return (
     <CenteredContainer>
-
-       <SelectDifficulty> Select the Level You want to focus on</SelectDifficulty>
-       <ButtonContainer>
-          <SelectedButton onClick={start}> Easy </SelectedButton>
-          <SelectedButton onClick={start}> Medium </SelectedButton>
-          <SelectedButton onClick={start}> Hard </SelectedButton>
-          <SelectedButton onClick={start}> Insane </SelectedButton>
-       </ButtonContainer>
-
+      <SelectDifficulty> Please choose the desired difficulty!</SelectDifficulty>
+      <ButtonContainer>
+        <SelectedButton onClick={() => start('easy')}> Easy </SelectedButton>
+        <SelectedButton onClick={() => start('medium')}> Medium </SelectedButton>
+        <SelectedButton onClick={() => start('hard')}> Hard </SelectedButton>
+        <SelectedButton onClick={() => start('insane')}> Insane </SelectedButton>
+      </ButtonContainer>
     </CenteredContainer>
-    
   );
-
 }
 
 export default GameMode;
