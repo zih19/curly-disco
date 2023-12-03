@@ -113,7 +113,6 @@ const Game = () => {
            console.error('Error: ', error);
         })
         setScore(0);
-        setDifficulty("Easy");
         setUserAnswers([]);
         setNumber(0);
         setLoading(false);
