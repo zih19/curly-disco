@@ -19,6 +19,7 @@ export type AnswerObject = {
 };
 
 const TOTAL_QUESTIONS = 10;
+let correctAnswers: string[] = [];
 
 const Game = () => {
    const location = useLocation();
@@ -107,7 +108,10 @@ const Game = () => {
         })
         .then(response => {
            const questionsData = response.data.questionsData;
-           console.log("Questions Data: ", questionsData);
+           for(let i = 0; i < questionsData.length; i++){
+            correctAnswers[i] = questionsData['interval'];
+           }
+           console.log("Questions Data: ", {questionsData});
         })
         .catch(error => {
            console.error('Error: ', error);
@@ -127,7 +131,7 @@ const Game = () => {
            return
       }
 
-      const correct_answer = questions[number].correct_answer;
+      const correct_answer = correctAnswers[number];
       const isCorrect = correct_answer === answer_selected;
       
       if (isCorrect) {
@@ -136,6 +140,7 @@ const Game = () => {
       setCurrentAnswer({answer: answer_selected, 
                         isCorrect,
                         correctAnswer: correct_answer});
+      setUserAnswers(prevUserAnswers => [...prevUserAnswers, answer_selected]);
       
    }
  
