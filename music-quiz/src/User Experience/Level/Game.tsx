@@ -74,9 +74,8 @@ const Game = () => {
             'Content-Type': 'text/plain',
           },
         });
-       
+        
         setScore(0);
-        setDifficulty("Easy");
         setUserAnswers([]);
         setNumber(0);
         setLoading(false);
