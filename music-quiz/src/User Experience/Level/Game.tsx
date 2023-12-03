@@ -95,7 +95,8 @@ const Game = () => {
 
    //console.log(fetchQuizQuestions(TOTAL_QUESTIONS, Difficulty.EASY)); 
 
-   const startTrivial = async () => {
+   const startTrivial = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         // We want to make the API call(start the game) 
         // with the function called async().
         setLoading(true);
@@ -107,6 +108,7 @@ const Game = () => {
             },
         })
         .then(response => {
+          console.log("HI")
            const questionsData = response.data.questionsData;
            for(let i = 0; i < questionsData.length; i++){
             correctAnswers[i] = questionsData['interval'];
