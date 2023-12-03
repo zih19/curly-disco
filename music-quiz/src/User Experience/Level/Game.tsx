@@ -20,14 +20,15 @@ export type AnswerObject = {
 };
 
 const TOTAL_QUESTIONS = 10;
-let correctAnswers: string[] = [];
+
 
 const Game = () => {
+   console.log("GAME CALLED")
    const location = useLocation();
-   const difficultyFromUrl = new URLSearchParams(location.search).get('difficulty')
+   const difficultyFromUrl = new URLSearchParams(location.search).get('difficulty');
    //const[openLoginin, setOpenLoginIn] = useState(false);
    //const[signedIn, signIn] = useState(false);
-
+   let correctAnswers: string[] = [];
    const[loading, setLoading] = useState(false); // My game is loaded
 
    /* change the type of questions into the audio files created */
@@ -57,9 +58,8 @@ const Game = () => {
    const[userAnswers, setUserAnswers] = useState<string[]>([]); // the answers from the users
 
    const[score, setScore] = useState(0); // the score each user receives
-
    const[gameOver, setGameOver] = useState(true); // the game is Over
-
+   console.log("GameOver Below: " + gameOver);
 
    const[timer, setTimer] = useState({
       seconds: 0,
@@ -96,15 +96,21 @@ const Game = () => {
    //console.log(fetchQuizQuestions(TOTAL_QUESTIONS, Difficulty.EASY)); 
 
    const startTrivial = async (e: MouseEvent) => {
+        console.log("Click event:", e);
         e.preventDefault();
+        if(!gameOver) {
+          console.log("GAME ALREADY IN SESSIon")
+          return;
+        }
         // We want to make the API call(start the game) 
         // with the function called async().
-        
         setLoading(true);
-        setGameOver(false);
-        console.log("Beginning of startTrivial")
+        
+        console.log("Beginning of startTrivial");
         // Make a POST request to send the difficulty to the backend
         try{
+          console.log(loading);
+          console.log(gameOver);
           const response = await axios.post('http://127.0.0.1:8000/api/start-game/', difficultyFromUrl, {
               headers: {
                 'Content-Type': 'application/json',
@@ -175,7 +181,8 @@ const Game = () => {
 
    const nextQuestion = () => {
         // concentrate on the specific instance at which the user
-        // selects the next question.
+        // selects the next question..
+        console.log("IN THE FUCKING NEXT QUESTION")
         const next = number + 1;
         if (next === TOTAL_QUESTIONS){
             setGameOver(true);
@@ -207,10 +214,10 @@ const Game = () => {
                         <h1>Music Quiz</h1>
               </div>
               <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-                  <GameStartButton className="start" onClick={startTrivial}>
+                  <GameStartButton type = "button" className="start" onClick={startTrivial}>
                       Start
                   </GameStartButton>
-                  <GameStartButton className="back" onClick={UserMenu}>
+                  <GameStartButton type = "button" className="back" onClick={UserMenu}>
                       Back
                   </GameStartButton>
               </div>
