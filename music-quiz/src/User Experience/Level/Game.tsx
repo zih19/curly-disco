@@ -23,7 +23,13 @@ const TOTAL_QUESTIONS = 10;
 
 
 const Game = () => {
-   console.log("GAME CALLED")
+  // useEffect(() => {
+  //   console.log('Game component mounted');
+  //   return () => {
+  //     console.log('Game component unmounted');
+  //   };
+  // }, []);
+
    const location = useLocation();
    const difficultyFromUrl = new URLSearchParams(location.search).get('difficulty');
    //const[openLoginin, setOpenLoginIn] = useState(false);
@@ -59,7 +65,6 @@ const Game = () => {
 
    const[score, setScore] = useState(0); // the score each user receives
    const[gameOver, setGameOver] = useState(true); // the game is Over
-   console.log("GameOver Below: " + gameOver);
 
    const[timer, setTimer] = useState({
       seconds: 0,
@@ -94,10 +99,13 @@ const Game = () => {
    const navigate = useNavigate();
 
    //console.log(fetchQuizQuestions(TOTAL_QUESTIONS, Difficulty.EASY)); 
+   const dataToSend = {
+    difficulty: difficultyFromUrl,
+  };
 
-   const startTrivial = async (e: MouseEvent) => {
-        console.log("Click event:", e);
-        e.preventDefault();
+   const startTrivial = async (e: React.MouseEvent<HTMLElement>) => {
+        //console.log("Click event:", e);
+        
         if(!gameOver) {
           console.log("GAME ALREADY IN SESSIon")
           return;
@@ -105,21 +113,27 @@ const Game = () => {
         // We want to make the API call(start the game) 
         // with the function called async().
         setLoading(true);
+        setGameOver(false);
         
         console.log("Beginning of startTrivial");
         // Make a POST request to send the difficulty to the backend
+        e.preventDefault();
         try{
           console.log(loading);
           console.log(gameOver);
-          const response = await axios.post('http://127.0.0.1:8000/api/start-game/', difficultyFromUrl, {
+          const response = await axios.post('http://127.0.0.1:8000/api/start-game/', dataToSend, {
               headers: {
                 'Content-Type': 'application/json',
               },
               responseType: 'json',
           });
-          console.log(response);
+
+          const questionsData = response.data.questionsData;
+            for(let i = 0; i < Object.keys(questionsData).length; i++){
+             correctAnswers[i] = questionsData[(i+1).toString()]['interval'];
+            }
+            console.log("Questions Data: ", {correctAnswers});
         }catch (error) {
-          console.log("WEFJWIEFHJ")
           if (axios.isAxiosError(error)) {
             console.error('Question loading failed:', error.response ? error.response.data : error.message); //failing here
           } else {
@@ -127,15 +141,7 @@ const Game = () => {
           }
           //alert('Invalid username or password');
         }
-        console.log("Got after")
-        
-        //const questionsData = response.data.questionsData;
-        // for(let i = 0; i < questionsData.length; i++){
-        //  correctAnswers[i] = questionsData['interval'];
-        // }
-        // console.log("Questions Data: ", {questionsData});
 
-     
         setScore(0);
         setUserAnswers([]);
         setNumber(0);
@@ -143,7 +149,6 @@ const Game = () => {
         setTimer({seconds: 0, minutes: 0, hours: 0});
         setTimerRunning(true);
     };
-
 
     
    const CheckAnswer = (answer_selected: string) => {
@@ -193,11 +198,7 @@ const Game = () => {
       
     };
 
-
       
-    
-    
-    
     return (
      <>
 
