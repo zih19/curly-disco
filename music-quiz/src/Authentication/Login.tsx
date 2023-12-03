@@ -28,6 +28,10 @@ const Login = () => {
       const response = await axios.post('http://127.0.0.1:8000/api/user/login/', form);
       console.log('Login successful');
       console.log(response.data);
+      
+      const username = response.data.username;
+      localStorage.setItem('username', username);
+
       navigate('/menu');
     } catch (error) {
       if (axios.isAxiosError(error)) {

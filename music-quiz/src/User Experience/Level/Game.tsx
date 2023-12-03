@@ -1,20 +1,16 @@
-import React, { useState, useEffect } from 'react';
-//import { Difficulty, fetchQuizQuestions } from '../../Questions';
-// Components
-//import QuestionCard from '../../components/QuestionCard';
-//Type
-import {QuestionState} from '../../Questions';
+import React, { useState, useEffect, useRef } from 'react';
+
+
 //Styles
 import { GlobalStyle, Wrapper, NextButton, RecordButton, AgainButton, GameStartButton} from '../../GameContent.styles';
 
 import AnswerButtonsTwo from '../../AnswerButtonsTwo';
-//import GameMode from '../GameMode'
+
 import {useNavigate, useLocation} from 'react-router-dom';
 import { AiFillSound } from 'react-icons/ai';
 import axios from 'axios';
 
 
-//import axios from 'axios';
 export type AnswerObject = {
   question: string; // This is the audio file I am willing to consider
   answer: string;
@@ -33,9 +29,22 @@ const Game = () => {
    const[loading, setLoading] = useState(false); // My game is loaded
 
    /* change the type of questions into the audio files created */
-   const[questions, setQuestions] = useState<QuestionState[]>([]); 
-
+   
+   let questions: string[]  = [];
+   for (let i = 1; i <= TOTAL_QUESTIONS; i++){
+      questions.push(`../../../public/mp3 files/problem${i}.mp3`)
+   }
    const[number, setNumber] = useState(0); // the question number
+
+   const audioRef = useRef(new Audio());
+
+   const playSound = () => {
+       const currentMp3File = questions[number];
+       if (audioRef.current && currentMp3File) {
+           audioRef.current.src = currentMp3File;
+           audioRef.current.play().catch(e => console.error('Error playing sound: ', e));
+       }
+   }
 
    const[currentAnswer, setCurrentAnswer] = useState<{
         answer: string;
@@ -59,6 +68,28 @@ const Game = () => {
 
    const [timerRunning, setTimerRunning] = useState(false);
 
+   useEffect(()=>{
+    let interval: NodeJS.Timeout;
+    if (timerRunning) {
+      interval = setInterval(() => {
+         setTimer(prevTimer => {
+            let { hours, minutes, seconds } = prevTimer;
+            seconds++;
+            if (seconds === 60) {
+               minutes++;
+               seconds = 0;
+            }
+            if (minutes === 60) {
+               hours++;
+               minutes = 60;
+            }
+            return { hours, minutes, seconds };
+         });        
+      }, 1000);
+    } 
+    return () => clearInterval(interval);
+}, [timerRunning]);
+
    const navigate = useNavigate();
 
    //console.log(fetchQuizQuestions(TOTAL_QUESTIONS, Difficulty.EASY)); 
@@ -70,11 +101,17 @@ const Game = () => {
         setGameOver(false);
         // Make a POST request to send the difficulty to the backend
         await axios.post('http://127.0.0.1:8000/api/start-game/', difficultyFromUrl, {
-          headers: {
-            'Content-Type': 'text/plain',
-          },
-        });
-       
+            headers: {
+              'Content-Type': 'text/plain',
+            },
+        })
+        .then(response => {
+           const questionsData = response.data.questionsData;
+           console.log("Questions Data: ", questionsData);
+        })
+        .catch(error => {
+           console.error('Error: ', error);
+        })
         setScore(0);
         setDifficulty("Easy");
         setUserAnswers([]);
@@ -87,7 +124,7 @@ const Game = () => {
 
     
    const CheckAnswer = (answer_selected: string) => {
-      if (userAnswers.length === 0 || questions.length === 0) {
+      if (userAnswers.length === 0 || questions.length === 0 || gameOver) {
            return
       }
 
@@ -133,27 +170,7 @@ const Game = () => {
 
 
       
-    useEffect(()=>{
-      let interval: NodeJS.Timeout;
-      if (timerRunning) {
-        interval = setInterval(() => {
-           setTimer(prevTimer => {
-              let { hours, minutes, seconds } = prevTimer;
-              seconds++;
-              if (seconds === 60) {
-                 minutes++;
-                 seconds = 0;
-              }
-              if (minutes === 60) {
-                 hours++;
-                 minutes = 60;
-              }
-              return { hours, minutes, seconds };
-           });        
-        }, 1000);
-      } 
-      return () => clearInterval(interval);
-}, [timerRunning]);
+    
     
     
     return (
@@ -226,7 +243,7 @@ const Game = () => {
                      Question: {number + 1} / {TOTAL_QUESTIONS}
                   </p>
                   {/* TODO: include the audio */}
-                  <AiFillSound style={{height:50, width:50}}/>
+                  <AiFillSound style={{height:50, width:50}} onClick={playSound}/>
                   <AnswerButtonsTwo answers={['P1', 'm2', 'M2', 'm3', 
                                               'M3', 'P4', 'A4', 'P5', 
                                               'm6', 'M6', 'm7', 'M7',
