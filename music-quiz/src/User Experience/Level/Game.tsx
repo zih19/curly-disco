@@ -8,6 +8,7 @@ import AnswerButtonsTwo from '../../AnswerButtonsTwo';
 
 import {useNavigate, useLocation} from 'react-router-dom';
 import { AiFillSound } from 'react-icons/ai';
+import {MouseEvent} from 'react';
 import axios from 'axios';
 
 
@@ -56,7 +57,6 @@ const Game = () => {
    const[userAnswers, setUserAnswers] = useState<string[]>([]); // the answers from the users
 
    const[score, setScore] = useState(0); // the score each user receives
-   const[difficulty, setDifficulty] = useState('Easy');
 
    const[gameOver, setGameOver] = useState(true); // the game is Over
 
@@ -95,29 +95,41 @@ const Game = () => {
 
    //console.log(fetchQuizQuestions(TOTAL_QUESTIONS, Difficulty.EASY)); 
 
-   const startTrivial = async (e: React.FormEvent<HTMLFormElement>) => {
+   const startTrivial = async (e: MouseEvent) => {
         e.preventDefault();
         // We want to make the API call(start the game) 
         // with the function called async().
+        
         setLoading(true);
         setGameOver(false);
+        console.log("Beginning of startTrivial")
         // Make a POST request to send the difficulty to the backend
-        await axios.post('http://127.0.0.1:8000/api/start-game/', difficultyFromUrl, {
-            headers: {
-              'Content-Type': 'text/plain',
-            },
-        })
-        .then(response => {
-          console.log("HI")
-           const questionsData = response.data.questionsData;
-           for(let i = 0; i < questionsData.length; i++){
-            correctAnswers[i] = questionsData['interval'];
-           }
-           console.log("Questions Data: ", {questionsData});
-        })
-        .catch(error => {
-           console.error('Error: ', error);
-        })
+        try{
+          const response = await axios.post('http://127.0.0.1:8000/api/start-game/', difficultyFromUrl, {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              responseType: 'json',
+          });
+          console.log(response);
+        }catch (error) {
+          console.log("WEFJWIEFHJ")
+          if (axios.isAxiosError(error)) {
+            console.error('Question loading failed:', error.response ? error.response.data : error.message); //failing here
+          } else {
+              console.error('Question loading failed:', error);
+          }
+          //alert('Invalid username or password');
+        }
+        console.log("Got after")
+        
+        //const questionsData = response.data.questionsData;
+        // for(let i = 0; i < questionsData.length; i++){
+        //  correctAnswers[i] = questionsData['interval'];
+        // }
+        // console.log("Questions Data: ", {questionsData});
+
+     
         setScore(0);
         setUserAnswers([]);
         setNumber(0);
@@ -151,11 +163,11 @@ const Game = () => {
        navigate('/menu/gamestart');
    }
 
-   const UserRecord = () => {
-       navigate('/menu/userdata', {state:{score: score, 
-                                          difficulty: difficulty,
-                                          timer: `${timer.hours}h ${timer.minutes}m ${timer.seconds}s`}});
-   }
+  //  const UserRecord = () => {
+  //      navigate('/menu/userdata', {state:{score: score, 
+  //                                         difficulty: difficulty,
+  //                                         timer: `${timer.hours}h ${timer.minutes}m ${timer.seconds}s`}});
+  //  }
 
    const UserMenu = () => {
         navigate('/menu');
@@ -195,7 +207,7 @@ const Game = () => {
                         <h1>Music Quiz</h1>
               </div>
               <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-                  <GameStartButton className="start" onClick={startTrivial} >
+                  <GameStartButton className="start" onClick={startTrivial}>
                       Start
                   </GameStartButton>
                   <GameStartButton className="back" onClick={UserMenu}>
@@ -209,9 +221,9 @@ const Game = () => {
           {!gameOver && number === TOTAL_QUESTIONS - 1 && userAnswers.length === number + 1 &&
             <div>
               
-              <RecordButton className="statistics" onClick={UserRecord}>
+              {/* <RecordButton className="statistics" onClick={UserRecord}>
                          User Record
-              </RecordButton>
+              </RecordButton> */}
               
               <AgainButton className="finish" onClick={BackMenu}>
                          Play Again
