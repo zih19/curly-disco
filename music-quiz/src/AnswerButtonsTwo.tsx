@@ -11,38 +11,49 @@ interface ButtonGroupProps {
    answerSelected: {
       answer: string,
       isCorrect: boolean,
-      correctAnswer: string
-   } | null;
+      correctAnswer: string;
+   } | null
+   showCorrectAnswer: boolean
 }
 
-const AnswerButtonsTwo: React.FC<ButtonGroupProps> = ({answers, onAnswerClick, answerSelected}) => {
- 
+const AnswerButtonsTwo: React.FC<ButtonGroupProps> = ({answers, onAnswerClick, answerSelected, showCorrectAnswer}) => {
+  
+
+   const handleAnswerClick = (answer: string) => {
+      console.log("answer clicked");
+      onAnswerClick(answer);
+   }
    return (
    <> 
       <ButtonGroupsOne>
       {
-         answers.map((answer) => {
-            
+         answers.map((answerOption) => {
+           
             let buttonColor = "#0074d9";
 
-            if (answerSelected) {
-               if (answerSelected.answer === answer) {
-                 buttonColor = answerSelected.isCorrect ? "green" : "red";
+            if (answerSelected && showCorrectAnswer) {
+               if (answerSelected.answer === answerOption) {
+                 buttonColor = answerSelected.isCorrect ? 'green' : 'red'
                }
-               else if (answer === answerSelected.correctAnswer) {
-                  buttonColor = "green";
+               else if (answerOption === answerSelected.correctAnswer) {
+                  buttonColor = 'green' 
                }
             }
            
             return (
-               <SquaredButton key={answer} 
-                              onClick={()=>onAnswerClick(answer)}
-                              style={{backgroundColor: buttonColor}}>
-                     {answer}
+               <SquaredButton 
+                     key={answerOption} 
+                     onClick={()=>handleAnswerClick(answerOption)}
+                     backgroundColor={buttonColor}
+               >
+                     {answerOption}
                </SquaredButton>
             );
+
+         
          })
       }
+      
       </ButtonGroupsOne>
    </>
    );

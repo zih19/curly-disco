@@ -8,8 +8,19 @@ import AnswerButtonsTwo from '../../AnswerButtonsTwo';
 import { useCookies } from 'react-cookie';
 import {useNavigate, useLocation} from 'react-router-dom';
 import { AiFillSound } from 'react-icons/ai';
-import {MouseEvent} from 'react';
 import axios from 'axios';
+
+//Audio
+import Audio1 from '../../mp3 files/problem1.mp3';
+import Audio2 from '../../mp3 files/problem2.mp3';
+import Audio3 from '../../mp3 files/problem3.mp3';
+import Audio4 from '../../mp3 files/problem4.mp3';
+import Audio5 from '../../mp3 files/problem5.mp3';
+import Audio6 from '../../mp3 files/problem6.mp3';
+import Audio7 from '../../mp3 files/problem7.mp3';
+import Audio8 from '../../mp3 files/problem8.mp3';
+import Audio9 from '../../mp3 files/problem9.mp3';
+import Audio10 from '../../mp3 files/problem10.mp3';
 
 
 export type AnswerObject = {
@@ -29,25 +40,25 @@ const Game = () => {
   //     console.log('Game component unmounted');
   //   };
   // }, []);
+
+
    const location = useLocation();
    const difficultyFromUrl = new URLSearchParams(location.search).get('difficulty');
-   //const[openLoginin, setOpenLoginIn] = useState(false);
-   //const[signedIn, signIn] = useState(false);
-   let correctAnswers: string[] = [];
+   
+
    const[loading, setLoading] = useState(false); // My game is loaded
 
    /* change the type of questions into the audio files created */
    
-   let questions: string[]  = [];
-   for (let i = 1; i <= TOTAL_QUESTIONS; i++){
-      questions.push(`../../../public/mp3 files/problem${i}.mp3`)
-   }
    const[number, setNumber] = useState(0); // the question number
+  
+   const questions = [Audio1, Audio2, Audio3, Audio4, Audio5, Audio6, Audio7, Audio8, Audio9, Audio10];
 
    const audioRef = useRef(new Audio());
 
    const playSound = () => {
        const currentMp3File = questions[number];
+       console.log("The current mp3 file is: ", currentMp3File);
        if (audioRef.current && currentMp3File) {
            audioRef.current.src = currentMp3File;
            audioRef.current.play().catch(e => console.error('Error playing sound: ', e));
@@ -70,6 +81,12 @@ const Game = () => {
       minutes: 0,
       hours: 0
    });
+
+   const[showCorrectAnswer, setShowCorrectAnswer] = useState(false);
+   //let correctAnswers: string[] = [];
+   const[correctAnswers, setCorrectAnswers] = useState<string[]>([]);
+   //console.log("currentAnswer:", currentAnswer, "showCorrectAnswer:", showCorrectAnswer);
+
 
    const [timerRunning, setTimerRunning] = useState(false);
 
@@ -127,11 +144,13 @@ const Game = () => {
           });
 
           const questionsData = response.data.questionsData;
-            for(let i = 0; i < Object.keys(questionsData).length; i++){
-             correctAnswers[i] = questionsData[(i+1).toString()]['interval'];
-            }
-            console.log("Questions Data: ", {correctAnswers});
-        }catch (error) {
+        //   let correctAnswersVerified: string[] = [];
+        //  for(let i = 0; i < Object.keys(questionsData).length; i++){
+        //     correctAnswersVerified[i] = questionsData[(i+1).toString()]['interval'];
+        //    }
+        // console.log("Correct Answers Verified: ", correctAnswersVerified)
+          setCorrectAnswers(Object.keys(questionsData).map(key => questionsData[key]['interval']));
+      }catch (error) {
           if (axios.isAxiosError(error)) {
             console.error('Question loading failed:', error.response ? error.response.data : error.message); //failing here
           } else {
@@ -139,6 +158,8 @@ const Game = () => {
           }
           //alert('Invalid username or password');
         }
+         
+       
 
         setScore(0);
         setUserAnswers([]);
@@ -149,34 +170,48 @@ const Game = () => {
     };
 
     
+    
    const CheckAnswer = (answer_selected: string) => {
-      if (userAnswers.length === 0 || questions.length === 0 || gameOver) {
-           return
-      }
+      //console.log("The current answer is: ", answer_selected);
+      //console.log("Answer selected:", answer_selected, "Correct answer:", correctAnswers[number]);
+      // if (userAnswers.length === 0 || questions.length === 0) {
+      //      return;
+      // }
 
       const correct_answer = correctAnswers[number];
+      
       const isCorrect = correct_answer === answer_selected;
       
+      setUserAnswers((prevUserAnswers) => [...prevUserAnswers, answer_selected]);
+      setCurrentAnswer({
+        answer: answer_selected, 
+        isCorrect,
+        correctAnswer: correct_answer
+      });
+
+      console.log("current Answer:", currentAnswer);
+
+
       if (isCorrect) {
         setScore((prev) => prev + 1);
       }
-      setCurrentAnswer({answer: answer_selected, 
-                        isCorrect,
-                        correctAnswer: correct_answer});
-      setUserAnswers(prevUserAnswers => [...prevUserAnswers, answer_selected]);
-      
-   }
+
+      setShowCorrectAnswer(true);
+
+      if (number === TOTAL_QUESTIONS - 1) {
+        // the timer is stopped
+        setTimerRunning(false);
+      }
+    }
  
    const BackMenu = () => {
        
        navigate('/menu/gamestart');
    }
 
-  //  const UserRecord = () => {
-  //      navigate('/menu/userdata', {state:{score: score, 
-  //                                         difficulty: difficulty,
-  //                                         timer: `${timer.hours}h ${timer.minutes}m ${timer.seconds}s`}});
-  //  }
+   const UserRecord = () => {
+       navigate('/menu/userdata');
+   }
 
    const UserMenu = () => {
         navigate('/menu');
@@ -187,13 +222,14 @@ const Game = () => {
         // selects the next question..
         const next = number + 1;
         if (next === TOTAL_QUESTIONS){
+            setTimerRunning(false);
             setGameOver(true);
         }
         else{
             setNumber(next);
+            setShowCorrectAnswer(false);
         }
-      
-    };
+  };
 
       
     return (
@@ -223,12 +259,12 @@ const Game = () => {
           }
 
 
-          {!gameOver && number === TOTAL_QUESTIONS - 1 && userAnswers.length === number + 1 &&
+          {!gameOver && number === TOTAL_QUESTIONS - 1 && userAnswers.length === TOTAL_QUESTIONS &&
             <div>
               
-              {/* <RecordButton className="statistics" onClick={UserRecord}>
+              <RecordButton className="statistics" onClick={UserRecord}>
                          User Record
-              </RecordButton> */}
+              </RecordButton>
               
               <AgainButton className="finish" onClick={BackMenu}>
                          Play Again
@@ -273,6 +309,7 @@ const Game = () => {
                                               'P8']} 
                                     onAnswerClick={CheckAnswer}
                                     answerSelected={currentAnswer}
+                                    showCorrectAnswer={showCorrectAnswer}
                   />
               </div>
             )}

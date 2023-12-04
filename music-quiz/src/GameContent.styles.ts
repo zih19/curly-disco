@@ -74,7 +74,7 @@ align-items: center;
 `;
 
 export const NextButton = styled.button`
-  background-color: gray;
+  background-color: blue;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -86,27 +86,27 @@ export const NextButton = styled.button`
 `;
 
 export const RecordButton = styled.button `
-    background-color: gray;
+    background-color: blue;
     color: white;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
     position: relative;
-    top: 525px; 
+    top: 450px; 
     right: 0px;
 `;
 
 export const AgainButton = styled.button `
-    background-color: gray;
+    background-color: blue;
     color: white;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
     position: relative;
-    top: 525px; 
-    left: 50px;
+    top: 450px; 
+    left: 60px;
 `;
 
 export const GameStartButton = styled.button `
