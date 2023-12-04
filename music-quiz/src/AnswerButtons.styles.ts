@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 
+interface SquaredButtonProps {
+    backgroundColor?: string;
+ }
+
 export const ButtonGroupsOne = styled.div`
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -16,14 +20,13 @@ export const ButtonGroupsTwo = styled.div`
     gap: 5px;
 `;
 
-export const SquaredButton = styled.button`
-    width: 100%;
-    height: 100px;
-    background-color: #0074d9; 
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center
-    justify_content: center
+export const SquaredButton = styled.button<SquaredButtonProps>`
+width: 50px;
+height: 50px;
+border: none;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+background-color: ${(props) => props.backgroundColor || '#0074d9'};
 `;
