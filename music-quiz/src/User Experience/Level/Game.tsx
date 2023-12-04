@@ -5,7 +5,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { GlobalStyle, Wrapper, NextButton, RecordButton, AgainButton, GameStartButton} from '../../GameContent.styles';
 
 import AnswerButtonsTwo from '../../AnswerButtonsTwo';
-
+import { useCookies } from 'react-cookie';
 import {useNavigate, useLocation} from 'react-router-dom';
 import { AiFillSound } from 'react-icons/ai';
 import {MouseEvent} from 'react';
@@ -29,7 +29,6 @@ const Game = () => {
   //     console.log('Game component unmounted');
   //   };
   // }, []);
-
    const location = useLocation();
    const difficultyFromUrl = new URLSearchParams(location.search).get('difficulty');
    //const[openLoginin, setOpenLoginIn] = useState(false);
@@ -119,12 +118,11 @@ const Game = () => {
         // Make a POST request to send the difficulty to the backend
         e.preventDefault();
         try{
-          console.log(loading);
-          console.log(gameOver);
           const response = await axios.post('http://127.0.0.1:8000/api/start-game/', dataToSend, {
               headers: {
                 'Content-Type': 'application/json',
               },
+              withCredentials: true,
               responseType: 'json',
           });
 
@@ -187,7 +185,6 @@ const Game = () => {
    const nextQuestion = () => {
         // concentrate on the specific instance at which the user
         // selects the next question..
-        console.log("IN THE FUCKING NEXT QUESTION")
         const next = number + 1;
         if (next === TOTAL_QUESTIONS){
             setGameOver(true);
@@ -215,7 +212,7 @@ const Game = () => {
                         <h1>Music Quiz</h1>
               </div>
               <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-                  <GameStartButton type = "button" className="start" onClick={startTrivial}>
+                  <GameStartButton type = "button" className="start" onClick={startTrivial} data-csrf="{% csrf_token %}">
                       Start
                   </GameStartButton>
                   <GameStartButton type = "button" className="back" onClick={UserMenu}>
