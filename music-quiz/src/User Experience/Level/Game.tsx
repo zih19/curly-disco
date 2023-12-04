@@ -50,9 +50,7 @@ const Game = () => {
 
    const audioRef = useRef(new Audio());
 
-   useEffect(() => {
-      playSound();
-   }, [number]);
+
 
    const playSound = () => {
        const currentMp3File = questions[number];
@@ -164,7 +162,15 @@ const Game = () => {
         setLoading(false);
         setTimer({seconds: 0, minutes: 0, hours: 0});
         setTimerRunning(true);
+
+        playSound();
     };
+
+    useEffect(() => {
+      if (!gameOver) {
+        playSound();
+      }
+    }, [number, gameOver]);
 
     
     
