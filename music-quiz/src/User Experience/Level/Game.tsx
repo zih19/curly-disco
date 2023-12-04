@@ -50,6 +50,10 @@ const Game = () => {
 
    const audioRef = useRef(new Audio());
 
+   useEffect(() => {
+      playSound();
+   }, [number]);
+
    const playSound = () => {
        const currentMp3File = questions[number];
        console.log("The current mp3 file is: ", currentMp3File);
@@ -153,9 +157,7 @@ const Game = () => {
           }
           //alert('Invalid username or password');
         }
-         
-       
-
+        
         setScore(0);
         setUserAnswers([]);
         setNumber(0);
