@@ -20,3 +20,14 @@ export function getCookie(name: string): string | null {
 
     return cookieValue;
 }
+
+
+
+// export function getCookie(name: string): string | null {
+//    const doc: Document = document as Document;
+//    console.log('All cookies:', document.cookie);
+//    const value = `; ${document.cookie}`;
+//    const parts = value.split(`; ${name}=`);
+//    if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
+//    return null;
+//  }

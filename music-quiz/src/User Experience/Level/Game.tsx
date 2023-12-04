@@ -10,7 +10,8 @@ import {useNavigate, useLocation} from 'react-router-dom';
 import { AiFillSound } from 'react-icons/ai';
 import axios from 'axios';
 
-//Audio
+//Audio 
+// TODO LATER: Make audio imports dynamic based on question amount
 import Audio1 from '../../mp3 files/problem1.mp3';
 import Audio2 from '../../mp3 files/problem2.mp3';
 import Audio3 from '../../mp3 files/problem3.mp3';
@@ -139,11 +140,12 @@ const Game = () => {
               headers: {
                 'Content-Type': 'application/json',
               },
-              withCredentials: true,
+              withCredentials: false,
               responseType: 'json',
           });
 
           const questionsData = response.data.questionsData;
+          console.log(questionsData);
         //   let correctAnswersVerified: string[] = [];
         //  for(let i = 0; i < Object.keys(questionsData).length; i++){
         //     correctAnswersVerified[i] = questionsData[(i+1).toString()]['interval'];

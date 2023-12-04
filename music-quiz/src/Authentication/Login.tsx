@@ -11,6 +11,14 @@ const Login = () => {
     password: '',
   });
 
+  useEffect(() => {
+    // Cleanup function
+    return () => {
+      console.log("Username Removed")
+      localStorage.removeItem('username');
+    };
+  }, []); // The empty dependency array ensures the effect runs only on mount and unmount
+
   const navigate = useNavigate();
 
 
@@ -31,22 +39,23 @@ const Login = () => {
       // const response = await axios.get('http://127.0.0.1:8000/get_csrf_token/');
       // const csrfToken = response.data.csrfToken;
       // console.log('CSRF Token:', csrfToken);
-      //const csrfToken = getCookie('csrftoken')
-      //console.log(csrfToken)
+      const csrfToken = getCookie('csrftoken')
+      console.log("AT login csrfToken: " + csrfToken)
+      console.log("csrfToken: " + csrfToken)
       const response = await axios.post('http://127.0.0.1:8000/api/user/login/', form, {
-        withCredentials: true,
+        withCredentials: false,
         // headers: {
         //   'X-CSRFToken': csrfToken,
         // },
       });
       console.log('Login successful');
       // console.log(loginResponse);
-      const csrfTokenBack = response.headers['x-csrftoken'];
-      console.log('CSRF Token from Response:', csrfTokenBack);
+      // const csrfTokenBack = response.headers['x-csrftoken'];
+      // console.log('CSRF Token from Response:', csrfTokenBack);
       
-      const username = response.data.username;
+      const username = response.data['username'];
       localStorage.setItem('username', username);
-
+      console.log(localStorage)
       navigate('/menu');
     } catch (error) {
       if (axios.isAxiosError(error)) {
