@@ -57,9 +57,7 @@ const Game = () => {
 
    const audioRef = useRef(new Audio());
 
-   useEffect(() => {
-      playSound();
-   }, [number]);
+   
 
    const playSound = () => {
        const currentMp3File = questions[number];
