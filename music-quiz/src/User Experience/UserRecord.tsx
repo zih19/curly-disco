@@ -1,24 +1,79 @@
-import {useLocation, useNavigate} from 'react-router-dom';
-import { ReturnButton } from '../GameContent.styles';
+import React, { useState } from 'react';
+import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { DifficultyLabel, TimeLabel, ChartContainer, StyledDropdown } from './Style/UserRecord.styles';
 
-const UserRecord = () => {
+
+
+type DataPoint = {
+    playNumber: number;
+    score: number;
+    timeSpent: string;
+    difficulty: string;
+    date: string;
+};
+
+// Sample data
+const initialData: DataPoint[] = [
+    // Populate with your game data
+    { playNumber: 1, score: 80, timeSpent: '5 mins', difficulty: 'Easy', date: '2023-01-01' },
+    { playNumber: 2, score: 70, timeSpent: '9 mins', difficulty: 'Medium', date: '2023-01-01' },
+    { playNumber: 3, score: 70, timeSpent: '12 mins', difficulty: 'Easy', date: '2023-01-01' },
+    { playNumber: 4, score: 60, timeSpent: '13 mins', difficulty: 'Hard', date: '2023-01-01' }
+    // ... more data points
+];
+
+const MyScatterPlot: React.FC = () => {
+    const [data, setData] = useState<DataPoint[]>(initialData);
+    const [selectedDifficulty, setSelectedDifficulty] = useState<string>('All');
+    const [selectedTimeFrame, setSelectedTimeFrame] = useState<string>('All');
+
+    // Function to handle difficulty selection
+    const handleDifficultyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedDifficulty(event.target.value);
+    };
+
+    // Function to handle time frame selection
+    const handleTimeFrameChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedTimeFrame(event.target.value);
+    };
+
+    return (
+        <>
+            <div>
+                <DifficultyLabel>
+                    Difficulty:
+                    <StyledDropdown value={selectedDifficulty} onChange={handleDifficultyChange}>
+                        <option value="All">All</option>
+                        <option value="Easy">Easy</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Hard">Hard</option>
+                        <option value="Insane">Insane</option>
+                    </StyledDropdown>
+                </DifficultyLabel>
+
+                <TimeLabel>
+                    Time Frame:
+                    <StyledDropdown value={selectedTimeFrame} onChange={handleTimeFrameChange}>
+                        <option value="All">All</option>
+                        <option value="Day">Day</option>
+                        <option value="Month">Month</option>
+                        <option value="Year">Year</option>
+                    </StyledDropdown>
+                </TimeLabel>
+            </div>
    
-    const location = useLocation();
-    const {score, difficulty} = location.state;
-
-    const RestartNewRound = () => {
-        const navigate = useNavigate()
-        navigate('/menu/gamestart')
-    }
-
-    return(
-       <div>
-           <h1> User Data</h1>
-           <p> Score: {score}</p>
-           <p> Difficulty: {difficulty}</p>
-
-          <ReturnButton className="return" onClick={RestartNewRound} > Restart Game </ReturnButton>
-       </div>
+            <ChartContainer>
+                <ResponsiveContainer width={650} height={550}>
+                    <ScatterChart>
+                        <CartesianGrid stroke="rgba(0, 0, 0, 0.8)"/>
+                        <XAxis type="number" dataKey="playNumber" name="Number of Plays" />
+                        <YAxis type="number" dataKey="score" name="Score" />
+                        <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+                        <Scatter data={data} fill="#02661d" />
+                    </ScatterChart>
+                </ResponsiveContainer>
+            </ChartContainer>
+        </>
     );
 };
-export default UserRecord;
+export default MyScatterPlot;
