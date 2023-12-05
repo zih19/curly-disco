@@ -74,8 +74,8 @@ const Login = () => {
   useEffect(() => {
     // Check if the user is on the login page and remove the username if necessary
     if (location.pathname === '/' && localStorage.getItem('username')) {
-      console.log("Current User: " + localStorage.getItem('username'))
-      console.log(location.pathname)
+      //console.log("Current User: " + localStorage.getItem('username'))
+      //console.log(location.pathname)
       console.log('Username Removed');
       localStorage.removeItem('username');
     }

@@ -90,7 +90,7 @@ const Game = () => {
    const[correctAnswers, setCorrectAnswers] = useState<string[]>([]);
    //console.log("currentAnswer:", currentAnswer, "showCorrectAnswer:", showCorrectAnswer);
 
-
+   const [totalTime, setTotalTime] = useState(0);
    const [timerRunning, setTimerRunning] = useState(false);
 
    useEffect(()=>{
@@ -108,18 +108,22 @@ const Game = () => {
                hours++;
                minutes = 60;
             }
+             // Calculate total time in seconds
+            const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+            setTotalTime(totalSeconds);
             return { hours, minutes, seconds };
          });        
       }, 1000);
     } 
     return () => clearInterval(interval);
-}, [timerRunning]);
+   }, [timerRunning]);
 
    const navigate = useNavigate();
 
    //console.log(fetchQuizQuestions(TOTAL_QUESTIONS, Difficulty.EASY)); 
    const dataToSend = {
     difficulty: difficultyFromUrl,
+    currentUser: localStorage.getItem('username')
   };
 
    const startTrivial = async (e: React.MouseEvent<HTMLElement>) => {
@@ -180,7 +184,42 @@ const Game = () => {
       }
     }, [number]);
 
-    
+    const saveGameData = async () => {
+    // Construct the data to be sent to the backend
+      const gameData = {
+          username: localStorage.getItem('username'), // Assuming you have stored the username in localStorage
+          score,
+          totalTime,
+          userAnswers,
+          // ... (other relevant data)
+        };
+        console.log(gameData)
+      try {
+        // Make a POST request to your backend API endpoint to store the game data
+        const response = await axios.post('http://127.0.0.1:8000/api/save-game-data/', gameData, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: false, // Depending on your backend configuration
+          responseType: 'json',
+        });
+      
+        console.log('Game data saved successfully:', response.data);
+      } catch (error) {
+        if (axios.isAxiosError(error)){
+          console.error('Error saving game data:', error.response ? error.response.data : error.message);
+        }else{
+          console.error('Error saving game data:', error)
+        }
+        
+      }
+    };
+    useEffect(() => {
+      if (~gameOver && userAnswers.length === TOTAL_QUESTIONS && number === TOTAL_QUESTIONS - 1) {
+        // Call the function to send game data to the backend when the game is over
+        saveGameData();
+      }
+    }, [gameOver, userAnswers]);
     
    const CheckAnswer = (answer_selected: string) => {
       //console.log("The current answer is: ", answer_selected);
