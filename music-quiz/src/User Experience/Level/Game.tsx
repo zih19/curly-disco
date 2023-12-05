@@ -85,7 +85,13 @@ const Game = () => {
       hours: 0
    });
 
+   type QuestionsData = {
+    [questionId: number]: {
+      [key: string]: string | number;
+    };
+   };
    const[showCorrectAnswer, setShowCorrectAnswer] = useState(false);
+   const[questionsData, setQuestionsData] = useState<QuestionsData>({});
    //let correctAnswers: string[] = [];
    const[correctAnswers, setCorrectAnswers] = useState<string[]>([]);
    //console.log("currentAnswer:", currentAnswer, "showCorrectAnswer:", showCorrectAnswer);
@@ -124,7 +130,7 @@ const Game = () => {
    const dataToSend = {
     difficulty: difficultyFromUrl,
     currentUser: localStorage.getItem('username')
-  };
+   };
 
    const startTrivial = async (e: React.MouseEvent<HTMLElement>) => {
         //console.log("Click event:", e);
@@ -152,6 +158,7 @@ const Game = () => {
 
           const questionsData = response.data.questionsData;
           console.log(questionsData);
+          setQuestionsData(questionsData)
         //   let correctAnswersVerified: string[] = [];
         //  for(let i = 0; i < Object.keys(questionsData).length; i++){
         //     correctAnswersVerified[i] = questionsData[(i+1).toString()]['interval'];
@@ -188,9 +195,11 @@ const Game = () => {
     // Construct the data to be sent to the backend
       const gameData = {
           username: localStorage.getItem('username'), // Assuming you have stored the username in localStorage
-          score,
-          totalTime,
-          userAnswers,
+          score: score,
+          totalTime: totalTime,
+          userAnswers: userAnswers,
+          questionsData: questionsData,
+          difficulty: dataToSend['difficulty'],
           // ... (other relevant data)
         };
         console.log(gameData)
