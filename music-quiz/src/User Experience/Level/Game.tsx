@@ -5,7 +5,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { GlobalStyle, Wrapper, NextButton, RecordButton, AgainButton, GameStartButton} from '../../GameContent.styles';
 
 import AnswerButtonsTwo from '../../AnswerButtonsTwo';
-import { useCookies } from 'react-cookie';
 import {useNavigate, useLocation} from 'react-router-dom';
 import { AiFillSound } from 'react-icons/ai';
 import axios from 'axios';
