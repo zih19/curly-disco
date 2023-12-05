@@ -17,7 +17,9 @@ const Leaderboard: React.FC = () => {
 
   const fetchLeaderboardData = async () => {
     try {
+      console.log("REQUESTI MADE")
       const response = await axios.get<LeaderboardData>(`http://127.0.0.1:8000/api/leaderboard/`);
+      console.log(response.data.leaderboard)
       return response.data.leaderboard;
     } catch (error) {
       console.error('Error fetching leaderboard data:', error);

@@ -51,3 +51,11 @@ export const TimeLabel = styled.label`
      bottom: 10px;
    }
 `;
+
+export const CustomTooltip = styled.div`
+  background-color: white;
+  padding: 10px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: black; // Adjust text color as needed
+`;
