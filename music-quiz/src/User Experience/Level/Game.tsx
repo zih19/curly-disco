@@ -132,7 +132,7 @@ const Game = () => {
         // We want to make the API call(start the game) 
         // with the function called async().
         setLoading(true);
-        setGameOver(false);
+        
         
         console.log("Beginning of startTrivial");
         // Make a POST request to send the difficulty to the backend
@@ -166,18 +166,19 @@ const Game = () => {
         setScore(0);
         setUserAnswers([]);
         setNumber(0);
-        setLoading(false);
         setTimer({seconds: 0, minutes: 0, hours: 0});
         setTimerRunning(true);
+        setGameOver(false);
+        setLoading(false);
 
-        playSound();
+        //playSound();
     };
 
     useEffect(() => {
-      if (!gameOver) {
+      if (!gameOver && !loading) {
         playSound();
       }
-    }, [number, gameOver]);
+    }, [number]);
 
     
     
