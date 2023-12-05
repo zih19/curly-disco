@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { DifficultyLabel, TimeLabel, ChartContainer, StyledDropdown } from './Style/UserRecord.styles';
+import {  ChartContainer, DifficultyLabel, TimeLabel, StyledDropdown } from './Style/UserRecord.styles';
 
 
 
@@ -27,6 +27,37 @@ const MyScatterPlot: React.FC = () => {
     const [selectedDifficulty, setSelectedDifficulty] = useState<string>('All');
     const [selectedTimeFrame, setSelectedTimeFrame] = useState<string>('All');
 
+
+    const filterData = () => {
+        let filteredData = initialData;
+        //
+        if (selectedDifficulty !== 'All') {
+            filteredData = filteredData.filter(point => point.difficulty = selectedDifficulty);
+        }
+
+        const currentDate = new Date();
+        if (selectedTimeFrame !== 'All') {
+            filteredData = filteredData.filter(point => {
+                const pointDate = new Date(point.date);
+                switch(selectedTimeFrame) {
+                    case 'Day':
+                        return pointDate.toDateString() === currentDate.toDateString();
+                    case 'Month':
+                        return pointDate.getMonth() === currentDate.getMonth();
+                    case 'Year':
+                        return pointDate.getFullYear() === currentDate.getFullYear();
+                    default:
+                        return true;
+                }
+            })
+        }
+        setData(filteredData);
+    }
+
+    useEffect(()=> {
+        filterData();
+    }, [selectedDifficulty, selectedTimeFrame]);
+
     // Function to handle difficulty selection
     const handleDifficultyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedDifficulty(event.target.value);
@@ -34,6 +65,7 @@ const MyScatterPlot: React.FC = () => {
 
     // Function to handle time frame selection
     const handleTimeFrameChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        console.log(event.target.value);
         setSelectedTimeFrame(event.target.value);
     };
 
@@ -54,7 +86,7 @@ const MyScatterPlot: React.FC = () => {
                 <TimeLabel>
                     Time Frame:
                     <StyledDropdown value={selectedTimeFrame} onChange={handleTimeFrameChange}>
-                        <option value="All">All</option>
+                         <option value="All">All</option>
                         <option value="Day">Day</option>
                         <option value="Month">Month</option>
                         <option value="Year">Year</option>

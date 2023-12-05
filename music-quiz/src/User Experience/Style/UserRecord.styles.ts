@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 export const StyledDropdown = styled.select`
+  position: fixed;
   padding: 8px 16px;
   border-radius: 4px;
   border: 1px solid #ccc;
@@ -29,7 +30,14 @@ export const DifficultyLabel = styled.label`
    position: absolute;
    top: 40%; // Center vertically
    left: 300px;
-   transform: translateY(0, -50%); // Adjust for exact centering
+   transform: translateY(-50%); // Adjust for exact centering
+
+   @media (max-width: 768px) {
+     /* Adjust styles for smaller screens */
+     top: 20%;
+     left: 50%;
+     transform: translateX(-50%);
+   }
 `;
 
 export const TimeLabel = styled.label`
@@ -37,4 +45,9 @@ export const TimeLabel = styled.label`
    bottom: 30px;
    left: 50%;
    transform: translateX(-50%); // Adjust for exact centering
+
+   @media (max-width: 768px) {
+     /* Adjust styles for smaller screens */
+     bottom: 10px;
+   }
 `;
