@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 //import { useHistory } from 'react-router-dom';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { Wrapper, Header, FormGroup, Label, Input, SubmitButton} from './Style/User.styles';
 import axios from 'axios';
 import {getCookie} from '../utils';
@@ -10,16 +10,21 @@ const Login = () => {
     username: '',
     password: '',
   });
-
-  useEffect(() => {
-    // Cleanup function
-    return () => {
-      console.log("Username Removed")
-      localStorage.removeItem('username');
-    };
-  }, []); // The empty dependency array ensures the effect runs only on mount and unmount
-
   const navigate = useNavigate();
+  const location = useLocation();
+  // useEffect(() => {
+  //   // Cleanup function
+  //   return () => {
+  //     console.log("Current User: " + localStorage.getItem('username'))
+  //     console.log(location.pathname)
+  //     if (location.pathname === '/login'){
+  //       console.log("Username Removed")
+  //       localStorage.removeItem('username');
+  //     }
+  //   };
+  // }, []); // The empty dependency array ensures the effect runs only on mount and unmount
+
+ 
 
 
   const handleInput = (e:React.ChangeEvent<HTMLInputElement>) => {
@@ -66,7 +71,15 @@ const Login = () => {
       alert('Invalid username or password');
     }
   };
- 
+  useEffect(() => {
+    // Check if the user is on the login page and remove the username if necessary
+    if (location.pathname === '/' && localStorage.getItem('username')) {
+      console.log("Current User: " + localStorage.getItem('username'))
+      console.log(location.pathname)
+      console.log('Username Removed');
+      localStorage.removeItem('username');
+    }
+  }, []);
 
   return(
       
