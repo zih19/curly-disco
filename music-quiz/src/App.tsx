@@ -7,6 +7,7 @@ import Menu from './User Experience/Menu';
 import GameMode from './User Experience/GameMode';
 import Game from './User Experience/Level/Game';
 import UserRecord from './User Experience/UserRecord';
+import Leaderboard from './User Experience/Leaderboard';
 
 
 //import GameContent from './GameContent';
@@ -30,7 +31,7 @@ const App = () => {
             <Route path="/menu" element={<Menu />} />
             <Route path="/menu/userdata" element={<UserRecord />} />
             <Route path="/menu/gamestart" element={<GameMode />} />
-
+            <Route path="/menu/leaderboard" element={<Leaderboard/>} />
             
             <Route path="/menu/gamestart/play" element={<Game />}/>
             

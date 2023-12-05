@@ -27,6 +27,10 @@ const Menu: React.FC = () => {
         navigate('/');
     }
 
+    const Leaderboard = () => {
+        navigate('/menu/leaderboard');
+    }
+
 
     return(
         <CenteredContainer>
@@ -39,6 +43,7 @@ const Menu: React.FC = () => {
            <ButtonContainer>
                 <SelectedButton onClick={GameMode}>Games</SelectedButton>
                 <SelectedButton onClick={UserData}>User Data</SelectedButton>
+                <SelectedButton onClick={Leaderboard}>Leaderboard</SelectedButton>
                 <SelectedButton onClick={logOut}>Log Out </SelectedButton>
             </ButtonContainer>
 
