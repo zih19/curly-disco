@@ -11,16 +11,32 @@ import axios from 'axios';
 
 //Audio 
 // TODO LATER: Make audio imports dynamic based on question amount
-import Audio1 from '../../mp3 files/problem1.mp3';
-import Audio2 from '../../mp3 files/problem2.mp3';
-import Audio3 from '../../mp3 files/problem3.mp3';
-import Audio4 from '../../mp3 files/problem4.mp3';
-import Audio5 from '../../mp3 files/problem5.mp3';
-import Audio6 from '../../mp3 files/problem6.mp3';
-import Audio7 from '../../mp3 files/problem7.mp3';
-import Audio8 from '../../mp3 files/problem8.mp3';
-import Audio9 from '../../mp3 files/problem9.mp3';
-import Audio10 from '../../mp3 files/problem10.mp3';
+let Audio1: string | undefined;
+let Audio2: string | undefined;
+let Audio3: string | undefined;
+let Audio4: string | undefined;
+let Audio5: string | undefined;
+let Audio6: string | undefined;
+let Audio7: string | undefined;
+let Audio8: string | undefined;
+let Audio9: string | undefined;
+let Audio10: string | undefined;
+
+try {
+  Audio1 = require('../../mp3 files/problem1.mp3');
+  Audio2 = require('../../mp3 files/problem2.mp3');
+  Audio3 = require('../../mp3 files/problem3.mp3');
+  Audio4 = require('../../mp3 files/problem4.mp3');
+  Audio5 = require('../../mp3 files/problem5.mp3');
+  Audio6 = require('../../mp3 files/problem6.mp3');
+  Audio7 = require('../../mp3 files/problem7.mp3');
+  Audio8 = require('../../mp3 files/problem8.mp3');
+  Audio9 = require('../../mp3 files/problem9.mp3');
+  Audio10 = require('../../mp3 files/problem10.mp3');
+} catch (error) {
+  console.error('Error importing audio files:', error);
+  // Handle the error as needed
+}
 
 
 export type AnswerObject = {
